@@ -34,7 +34,7 @@
                     <i class="fa-solid fa-compass-drafting text-xl"></i>
                 </div>
                 <div>
-                    <h1 class="text-xl font-bold tracking-tight">オフィスレイアウト・プランナー <span class="text-xs bg-indigo-500 text-white px-2 py-0.5 rounded ml-2">Ver 2.0</span></h1>
+                    <h1 class="text-xl font-bold tracking-tight">オフィスレイアウト・プランナー <span class="text-xs bg-indigo-500 text-white px-2 py-0.5 rounded ml-2">Ver 2.2</span></h1>
                     <p class="text-xs text-slate-400">エヌケービル 3F (12.47坪 / 41.25㎡) 4名フリーアドレス計画</p>
                 </div>
             </div>
@@ -99,6 +99,44 @@
                 </div>
             </div>
 
+            <!-- プランの保存と復元 -->
+            <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-200">
+                <h2 class="text-base font-bold mb-3 flex items-center gap-2 text-slate-900">
+                    <i class="fa-solid fa-floppy-disk text-indigo-600"></i> プランの保存・管理
+                </h2>
+                <div class="space-y-3">
+                    <!-- 名前入力 -->
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">新規保存プラン名</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="plan-name-input" placeholder="例: 集中重視プランA" class="flex-1 px-3 py-1.5 border border-slate-300 rounded-lg text-xs focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 outline-none">
+                            <button onclick="savePlanCloud()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1">
+                                <i class="fa-solid fa-cloud-arrow-up"></i> クラウド保存
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- ローカルファイルでのバックアップ用 -->
+                    <div class="flex gap-2 pt-1 border-t border-slate-100">
+                        <button onclick="exportPlanFile()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-[10px] py-1.5 px-2 rounded-lg transition-colors flex items-center justify-center gap-1">
+                            <i class="fa-solid fa-file-export text-slate-500"></i> PCへファイル保存
+                        </button>
+                        <button onclick="triggerFileInput()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-[10px] py-1.5 px-2 rounded-lg transition-colors flex items-center justify-center gap-1">
+                            <i class="fa-solid fa-file-import text-slate-500"></i> ファイルから読込
+                        </button>
+                        <input type="file" id="plan-file-input" accept=".json" class="hidden" onchange="importPlanFile(event)">
+                    </div>
+
+                    <!-- 保存済み一覧 -->
+                    <div>
+                        <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">保存済みのプランリスト</span>
+                        <div id="saved-plans-list" class="max-h-36 overflow-y-auto space-y-1.5 pr-1 text-xs text-slate-600">
+                            <p class="text-[11px] text-slate-400 italic py-2 text-center">読み込み中、または保存されたプランはありません。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- プリセット配置案 -->
             <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-200">
                 <h2 class="text-base font-bold mb-3 flex items-center gap-2 text-slate-900">
@@ -111,20 +149,20 @@
                             <span class="font-bold text-slate-900 group-hover:text-indigo-600 text-sm">新プランA：執務スペース最大化</span>
                             <span class="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">推奨</span>
                         </div>
-                        <span class="text-xs text-slate-500">ロッカーをEVホール下の通路部分に逃がし、倉庫をWC横に隣接。梁や柱に干渉しないよう執務デスクを完璧に収めた王道プランです。</span>
+                        <span class="text-xs text-slate-500">ロッカーをEVホール下の通路部分に逃がし、倉庫をWC横に隣接。デスクと椅子、間仕切りを兼ねた収納棚を完璧に収めた王道プランです。</span>
                     </button>
                     <button onclick="applyPreset('planB')" class="group flex flex-col items-start p-3.5 rounded-xl border-2 border-slate-200 hover:border-indigo-600 hover:bg-indigo-50/40 text-left transition-all">
                         <div class="flex items-center justify-between w-full mb-1">
                             <span class="font-bold text-slate-900 group-hover:text-indigo-600 text-sm">新プランB：個人席＋島型ハイブリッド</span>
                             <span class="text-[10px] bg-blue-100 text-blue-800 px-2 py-0.5 rounded font-bold">集中エリア</span>
                         </div>
-                        <span class="text-xs text-slate-500">島型デスクに加え、新登場の「1人用デスク」を壁沿いに配置。フリーアドレスの中で、集中したい人と協働したい人を分ける最新トレンドです。</span>
+                        <span class="text-xs text-slate-500">島型デスクに加え、窓側に向かった集中用の1人用独立デスクを配置。協働と集中、さらに大容量棚を両立したプラン。</span>
                     </button>
                 </div>
             </div>
 
             <!-- 家具追加パネル -->
-            <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-200 flex-1">
+            <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-200">
                 <h2 class="text-base font-bold mb-3 flex items-center gap-2 text-slate-900">
                     <i class="fa-solid fa-plus text-indigo-600"></i> 家具の追加（EVホール配置可）
                 </h2>
@@ -138,9 +176,17 @@
                         <span class="w-6 h-6 rounded bg-amber-100 flex items-center justify-center text-amber-700">🖥️</span>
                         <span>4人用デスク</span>
                     </button>
+                    <button onclick="addFurniture('chair')" class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 active:bg-slate-100 transition-colors font-medium">
+                        <span class="w-6 h-6 rounded bg-purple-100 flex items-center justify-center text-purple-700">🪑</span>
+                        <span>オフィスチェア</span>
+                    </button>
                     <button onclick="addFurniture('meeting')" class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 active:bg-slate-100 transition-colors font-medium">
                         <span class="w-6 h-6 rounded bg-blue-100 flex items-center justify-center text-blue-700">🤝</span>
                         <span>会議テーブル</span>
+                    </button>
+                    <button onclick="addFurniture('shelf')" class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 active:bg-slate-100 transition-colors font-medium">
+                        <span class="w-6 h-6 rounded bg-sky-100 flex items-center justify-center text-sky-700">📂</span>
+                        <span>収納棚 (900×450)</span>
                     </button>
                     <button onclick="addFurniture('partition')" class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 active:bg-slate-100 transition-colors font-medium">
                         <span class="w-6 h-6 rounded bg-slate-200 flex items-center justify-center text-slate-700">🚧</span>
@@ -170,22 +216,28 @@
             <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200 flex flex-wrap justify-between items-center gap-4">
                 <div class="flex items-center gap-2">
                     <span class="w-3.5 h-3.5 rounded-full bg-indigo-600 animate-pulse"></span>
-                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Live Canvas 2.0</span>
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Live Canvas 2.2</span>
                     <span class="text-xs text-slate-400 bg-slate-100 px-2 py-0.5 rounded">1マス = 50cm</span>
                 </div>
                 
-                <div class="flex items-center gap-2 flex-wrap">
-                    <button onclick="rotateSelected()" id="btn-rotate" disabled class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-400 font-medium text-xs flex items-center gap-1.5 transition-colors cursor-not-allowed">
+                <div class="flex items-center gap-2 flex-wrap text-xs font-medium">
+                    <!-- 寸法表示トグルボタン (新規機能) -->
+                    <button onclick="toggleDimensions()" id="btn-dimensions" class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 border border-slate-200 hover:bg-slate-200 flex items-center gap-1.5 transition-colors">
+                        <i class="fa-solid fa-ruler-combined"></i> <span>寸法表示: OFF</span>
+                    </button>
+                    <div class="h-6 w-px bg-slate-200"></div>
+                    
+                    <button onclick="rotateSelected()" id="btn-rotate" disabled class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-400 flex items-center gap-1.5 transition-colors cursor-not-allowed">
                         <i class="fa-solid fa-rotate-right"></i> 選択家具を回転 (90°)
                     </button>
-                    <button onclick="deleteSelected()" id="btn-delete" disabled class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-400 font-medium text-xs flex items-center gap-1.5 transition-colors cursor-not-allowed">
+                    <button onclick="deleteSelected()" id="btn-delete" disabled class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-400 flex items-center gap-1.5 transition-colors cursor-not-allowed">
                         <i class="fa-solid fa-trash-can"></i> 削除
                     </button>
                     <div class="h-6 w-px bg-slate-200"></div>
-                    <button onclick="resetLayout()" class="px-3 py-1.5 rounded-lg bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 font-medium text-xs flex items-center gap-1.5 transition-colors">
+                    <button onclick="resetLayout()" class="px-3 py-1.5 rounded-lg bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 flex items-center gap-1.5 transition-colors">
                         <i class="fa-solid fa-arrow-rotate-left"></i> 全リセット
                     </button>
-                    <button onclick="exportAsImage()" class="px-3 py-1.5 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 font-medium text-xs flex items-center gap-1.5 shadow-sm transition-colors">
+                    <button onclick="exportAsImage()" class="px-3 py-1.5 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 flex items-center gap-1.5 shadow-sm transition-colors">
                         <i class="fa-solid fa-file-image"></i> 画像で保存
                     </button>
                 </div>
@@ -209,22 +261,49 @@
                 </div>
             </div>
 
-            <!-- プラン解説カード -->
-            <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-5">
-                <h3 class="font-bold text-indigo-900 text-sm mb-2 flex items-center gap-1.5">
-                    <i class="fa-solid fa-circle-info"></i> 新しい設計図面とレイアウトのアドバイス
-                </h3>
-                <div class="text-xs text-indigo-950/80 space-y-2 leading-relaxed">
-                    <p>
-                        <strong>① 梁・柱との干渉を避ける：</strong> 壁沿い（北、南、西の斜め壁）に走る<strong>「梁（斜線の入ったグレー帯）」</strong>は、天井高が下がっています。背の高いロッカーやパーティションは梁の通らない中央側に配置し、デスク類を梁下に配置するのがセオリーです。また、突出した<strong>「柱」</strong>を避けるようにデスクを置くことで、オフィスがより幾何学的に美しく整います。
-                    </p>
-                    <p>
-                        <strong>② 給湯をWCに密着した効果：</strong> 給湯シンクがWCの左壁に完全に密着したことで、EVを降りてから室内への通路幅が広がり、約1.2m以上の有効スペースが新しく生まれました。ここを<strong>「パーソナルロッカー置き場」</strong>や、植栽を置いた<strong>「リフレッシュ空間」</strong>にすることで、メイン執務スペースを100%作業エリアとして贅沢に使用できます。
-                    </p>
-                    <p>
-                        <strong>③ 1人用デスクの活用法：</strong> 新しく追加された「1人用デスク（1.2m×0.7m）」は、南側や窓際の壁面に向かって設置すると、周りの視線が気にならない「ソロ集中ブース」として機能し、フリーアドレスの満足度が格段に上がります。
-                    </p>
+            <!-- 解説 ＆ AIレイアウト診断（左右グリッド） -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                
+                <!-- プラン解説カード -->
+                <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-5 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-bold text-indigo-900 text-sm mb-2 flex items-center gap-1.5">
+                            <i class="fa-solid fa-circle-info"></i> 新しい設計図面とレイアウトのアドバイス
+                        </h3>
+                        <div class="text-xs text-indigo-950/80 space-y-2.5 leading-relaxed">
+                            <p>
+                                <strong>① 新登場！W900×D450キャビネット：</strong> 日本の事務所で書類やファイルを格納するのに最も一般的に利用されるモジュールサイズです。このサイズ（900mm幅）は、並べて壁面に置くことはもちろん、会議スペースと執務席の間を緩やかに区切る「パーテーション兼用ローシェルフ」としても機能します。
+                            </p>
+                            <p>
+                                <strong>② 寸法表示トグルの恩恵：</strong> 「寸法表示」をONにすると、各家具の実際のサイズ（ミリメートル単位）が図面上に重なって表示されます。歩行路（通路幅）として最低80cm（800mm）が確保できているかなどの現地検証に大いに役立ちます。
+                            </p>
+                            <p>
+                                <strong>③ 梁・柱との干渉を避ける：</strong> 壁沿いに走る<strong>「梁（斜線の入ったグレー帯）」</strong>は、天井高が下がっています。背の高いロッカーや棚は梁の通らない中央側に配置し、デスク類を梁下に配置するのがセオリーです。
+                            </p>
+                        </div>
+                    </div>
                 </div>
+
+                <!-- AIレイアウト診断（Gemini LLM） -->
+                <div class="bg-white border border-slate-200 shadow-sm rounded-xl p-5 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-sm mb-1.5 flex items-center justify-between">
+                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-brain text-indigo-600"></i> AIレイアウト診断アドバイザー</span>
+                            <span class="text-[9px] bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded font-bold">Gemini 2.5 Flash</span>
+                        </h3>
+                        <p class="text-[11px] text-slate-500 mb-3">現在の配置状況（家具の位置や梁の干渉など）をAIがプロの空間デザイナーとして評価します。</p>
+                        
+                        <!-- AI出力エリア -->
+                        <div id="ai-advice-output" class="min-h-[160px] max-h-[220px] overflow-y-auto bg-slate-50 border border-slate-100 rounded-lg p-3 text-xs text-slate-600 mb-3">
+                            <p class="text-center italic py-14 text-slate-400">「AIレイアウト診断を実行」ボタンを押すと、現在の配置を自動的に分析します。</p>
+                        </div>
+                    </div>
+
+                    <button id="btn-ai-analyze" onclick="analyzeLayoutWithAI()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs py-2 px-4 rounded-lg shadow-sm transition-colors flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> AIレイアウト診断を実行
+                    </button>
+                </div>
+
             </div>
 
         </div>
@@ -242,8 +321,12 @@
         <span id="toast-text">メッセージ</span>
     </div>
 
-    <!-- JSロジック -->
-    <script>
+    <!-- Firebase SDK & 全てのJavaScriptロジック -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
         const canvas = document.getElementById('officeCanvas');
         const ctx = canvas.getContext('2d');
         const btnRotate = document.getElementById('btn-rotate');
@@ -254,11 +337,18 @@
         const ORIGIN_X = 50;  // 図面描画のオフセット
         const ORIGIN_Y = 50;
         
-        // 部屋の有効範囲 (左上: ORIGIN_X, ORIGIN_Y から、全体サイズ 11.2m x 5.0m)
+        // 部屋の有効範囲
         const ROOM_W_M = 11.2;
         const ROOM_H_M = 5.0;
         const ROOM_WIDTH = ROOM_W_M * SCALE; // 672px
         const ROOM_HEIGHT = ROOM_H_M * SCALE; // 300px
+
+        // Firebase & 認証ステート
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        let db = null;
+        let auth = null;
+        let user = null;
 
         // システムステート
         let objects = [];
@@ -266,9 +356,19 @@
         let isDragging = false;
         let dragOffsetX = 0;
         let dragOffsetY = 0;
+        let showDimensions = false; // 寸法表示トグルフラグ
 
-        // 家具の仕様定義 (1200mm x 700mm の1人用デスクを追加)
+        // 家具の仕様定義 (W900xD450の収納棚を追加)
         const FURNITURE_TYPES = {
+            chair: {
+                name: "オフィスチェア (0.6m x 0.6m)",
+                w: 0.6,
+                h: 0.6,
+                color: "rgba(168, 85, 247, 0.15)", // 明るい紫色
+                borderColor: "#9333ea",
+                icon: "🪑",
+                desc: "1人用の快適なワークチェア。向きを合わせて配置してください。"
+            },
             solo_desk: {
                 name: "1人用デスク (1.2m x 0.7m)",
                 w: 1.2,
@@ -276,11 +376,11 @@
                 color: "rgba(251, 191, 36, 0.2)", // 明るい琥珀色
                 borderColor: "#b45309",
                 icon: "💻",
-                desc: "幅1.2m x 奥行き0.7mの標準的なオフィスデスク。壁面に沿った配置や集中席に最適。"
+                desc: "幅1.2m x 奥行き0.7mの標準的な個別デスク。集中席や壁面沿い配置に最適。"
             },
             desk: {
                 name: "4人用フリーアドレスデスク",
-                w: 2.4, // メートル
+                w: 2.4,
                 h: 1.2,
                 color: "rgba(245, 158, 11, 0.15)", 
                 borderColor: "#d97706",
@@ -295,6 +395,15 @@
                 borderColor: "#2563eb",
                 icon: "🤝",
                 desc: "1.5m x 0.9m の打ち合わせ用テーブル。4名掛けに最適。"
+            },
+            shelf: {
+                name: "収納棚 (0.9m x 0.45m)",
+                w: 0.9,
+                h: 0.45,
+                color: "rgba(14, 165, 233, 0.15)", // スカイブルー
+                borderColor: "#0284c7",
+                icon: "📂",
+                desc: "幅900mm x 奥行き450mmの標準棚。間仕切りや収納スペースに最適。"
             },
             partition: {
                 name: "パーティション",
@@ -321,7 +430,7 @@
                 color: "rgba(16, 185, 129, 0.15)", // エメラルド
                 borderColor: "#059669",
                 icon: "🗄️",
-                desc: "フリーアドレス時に必須となる、個人の荷物・書類を保管するロッカー。"
+                desc: "個人の荷物・書類を保管するロッカー。"
             },
             plant: {
                 name: "インドアグリーン",
@@ -334,38 +443,313 @@
             }
         };
 
-        // プリセット配置データ（右側エリアの自由化、WC横に給湯が来たこと、梁・柱を考慮した最適なアップデート）
+        // プリセット配置データ (新登場の収納棚を追加)
         const PRESETS = {
             planA: [
-                { type: 'warehouse', x: ORIGIN_X + 3.8*SCALE, y: ORIGIN_Y + 3.35*SCALE, angle: 0 }, // WCと給湯の左隣に寄せて空間最大化
-                { type: 'desk', x: ORIGIN_X + 1.2*SCALE, y: ORIGIN_Y + 1.8*SCALE, angle: 0 },     // 梁と柱を綺麗に避けた窓際中央の4人席
-                { type: 'meeting', x: ORIGIN_X + 4.8*SCALE, y: ORIGIN_Y + 1.0*SCALE, angle: 90 },  // EVの左に寄り添う会議テーブル
-                { type: 'partition', x: ORIGIN_X + 4.1*SCALE, y: ORIGIN_Y + 1.1*SCALE, angle: 90 },// 会議テーブルの間仕切り
-                { type: 'partition', x: ORIGIN_X + 4.6*SCALE, y: ORIGIN_Y + 2.0*SCALE, angle: 0 }, // 会議室のL字仕切り
-                { type: 'locker', x: ORIGIN_X + 7.5*SCALE, y: ORIGIN_Y + 2.3*SCALE, angle: 90 },   // EVから降りてすぐの通路（給湯の左隣の空き空間）に配置！
+                { type: 'warehouse', x: ORIGIN_X + 3.8*SCALE, y: ORIGIN_Y + 3.35*SCALE, angle: 0 }, 
+                { type: 'desk', x: ORIGIN_X + 1.2*SCALE, y: ORIGIN_Y + 1.8*SCALE, angle: 0 },     
+                // デスク周りに4脚
+                { type: 'chair', x: ORIGIN_X + 1.4*SCALE, y: ORIGIN_Y + 1.1*SCALE, angle: 180 },
+                { type: 'chair', x: ORIGIN_X + 2.2*SCALE, y: ORIGIN_Y + 1.1*SCALE, angle: 180 },
+                { type: 'chair', x: ORIGIN_X + 1.4*SCALE, y: ORIGIN_Y + 3.1*SCALE, angle: 0 },
+                { type: 'chair', x: ORIGIN_X + 2.2*SCALE, y: ORIGIN_Y + 3.1*SCALE, angle: 0 },
+                // 会議
+                { type: 'meeting', x: ORIGIN_X + 4.8*SCALE, y: ORIGIN_Y + 1.0*SCALE, angle: 90 },  
+                // 会議テーブル周りに4脚
+                { type: 'chair', x: ORIGIN_X + 4.1*SCALE, y: ORIGIN_Y + 1.1*SCALE, angle: 90 },
+                { type: 'chair', x: ORIGIN_X + 4.1*SCALE, y: ORIGIN_Y + 1.7*SCALE, angle: 90 },
+                { type: 'chair', x: ORIGIN_X + 5.8*SCALE, y: ORIGIN_Y + 1.1*SCALE, angle: 270 },
+                { type: 'chair', x: ORIGIN_X + 5.8*SCALE, y: ORIGIN_Y + 1.7*SCALE, angle: 270 },
+                // パーティション
+                { type: 'partition', x: ORIGIN_X + 4.0*SCALE, y: ORIGIN_Y + 1.1*SCALE, angle: 90 },
+                { type: 'partition', x: ORIGIN_X + 4.5*SCALE, y: ORIGIN_Y + 2.1*SCALE, angle: 0 }, 
+                // ロッカー
+                { type: 'locker', x: ORIGIN_X + 7.5*SCALE, y: ORIGIN_Y + 2.3*SCALE, angle: 90 },   
+                // 間仕切り収納棚を追加
+                { type: 'shelf', x: ORIGIN_X + 3.8*SCALE, y: ORIGIN_Y + 2.2*SCALE, angle: 0 },
+                { type: 'shelf', x: ORIGIN_X + 3.8*SCALE, y: ORIGIN_Y + 2.7*SCALE, angle: 0 },
                 { type: 'plant', x: ORIGIN_X + 0.4*SCALE, y: ORIGIN_Y + 0.4*SCALE, angle: 0 },
-                { type: 'plant', x: ORIGIN_X + 4.0*SCALE, y: ORIGIN_Y + 2.2*SCALE, angle: 0 }
+                { type: 'plant', x: ORIGIN_X + 4.0*SCALE, y: ORIGIN_Y + 1.7*SCALE, angle: 0 }
             ],
             planB: [
                 { type: 'warehouse', x: ORIGIN_X + 3.8*SCALE, y: ORIGIN_Y + 3.35*SCALE, angle: 0 }, 
-                { type: 'desk', x: ORIGIN_X + 1.6*SCALE, y: ORIGIN_Y + 1.2*SCALE, angle: 0 },     // メインの島型（窓際）
-                { type: 'solo_desk', x: ORIGIN_X + 1.2*SCALE, y: ORIGIN_Y + 3.5*SCALE, angle: 0 }, // 梁を考慮した個別集中席1（南側）
-                { type: 'solo_desk', x: ORIGIN_X + 2.4*SCALE, y: ORIGIN_Y + 3.5*SCALE, angle: 0 }, // 個別集中席2（南側）
+                { type: 'desk', x: ORIGIN_X + 1.6*SCALE, y: ORIGIN_Y + 1.2*SCALE, angle: 0 },     
+                // デスク椅子4脚
+                { type: 'chair', x: ORIGIN_X + 1.8*SCALE, y: ORIGIN_Y + 0.5*SCALE, angle: 180 },
+                { type: 'chair', x: ORIGIN_X + 2.6*SCALE, y: ORIGIN_Y + 0.5*SCALE, angle: 180 },
+                { type: 'chair', x: ORIGIN_X + 1.8*SCALE, y: ORIGIN_Y + 2.5*SCALE, angle: 0 },
+                { type: 'chair', x: ORIGIN_X + 2.6*SCALE, y: ORIGIN_Y + 2.5*SCALE, angle: 0 },
+                // 1人デスク＆椅子
+                { type: 'solo_desk', x: ORIGIN_X + 1.2*SCALE, y: ORIGIN_Y + 3.5*SCALE, angle: 0 }, 
+                { type: 'chair', x: ORIGIN_X + 1.5*SCALE, y: ORIGIN_Y + 4.3*SCALE, angle: 0 },
+                { type: 'solo_desk', x: ORIGIN_X + 2.4*SCALE, y: ORIGIN_Y + 3.5*SCALE, angle: 0 }, 
+                { type: 'chair', x: ORIGIN_X + 2.7*SCALE, y: ORIGIN_Y + 4.3*SCALE, angle: 0 },
+                // 会議テーブル＆椅子
                 { type: 'meeting', x: ORIGIN_X + 4.8*SCALE, y: ORIGIN_Y + 1.0*SCALE, angle: 90 },  
+                { type: 'chair', x: ORIGIN_X + 4.1*SCALE, y: ORIGIN_Y + 1.4*SCALE, angle: 90 },
+                { type: 'chair', x: ORIGIN_X + 5.8*SCALE, y: ORIGIN_Y + 1.4*SCALE, angle: 270 },
                 { type: 'partition', x: ORIGIN_X + 4.1*SCALE, y: ORIGIN_Y + 1.1*SCALE, angle: 90 },
-                { type: 'locker', x: ORIGIN_X + 7.5*SCALE, y: ORIGIN_Y + 2.3*SCALE, angle: 90 },   // 右側空きスペースのロッカー
+                { type: 'locker', x: ORIGIN_X + 7.5*SCALE, y: ORIGIN_Y + 2.3*SCALE, angle: 90 },   
+                // 収納棚
+                { type: 'shelf', x: ORIGIN_X + 3.8*SCALE, y: ORIGIN_Y + 2.2*SCALE, angle: 0 },
                 { type: 'plant', x: ORIGIN_X + 0.4*SCALE, y: ORIGIN_Y + 0.4*SCALE, angle: 0 }
             ]
         };
 
-        // 初期ロード
+        // 初期化
         window.onload = function() {
-            applyPreset('planA'); 
             setupEventListeners();
-            showToast("プランA：動線重視・梁回避レイアウトをロードしました！");
+            initFirebase();
+            applyPreset('planA'); 
         };
 
-        // メッセージ表示機能 (Toast)
+        // Firebase初期化 & 匿名ログイン
+        async function initFirebase() {
+            const listContainer = document.getElementById('saved-plans-list');
+            
+            if (!firebaseConfig) {
+                console.warn("Firebase configuration not available. Running in local file-backup mode.");
+                listContainer.innerHTML = '<p class="text-[10px] text-amber-600 italic py-1 px-1.5 text-center bg-amber-50 rounded border border-amber-100">オフライン動作中です。PCファイル保存・読込機能をご利用ください。</p>';
+                return;
+            }
+            try {
+                const app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+
+                // Auth FIRST (RULE 3)
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+                // 認証ステートの監視
+                onAuthStateChanged(auth, (usr) => {
+                    user = usr;
+                    if (user) {
+                        setupPlansListener();
+                    } else {
+                        listContainer.innerHTML = '<p class="text-[11px] text-slate-400 italic py-2 text-center">認証に失敗しました。</p>';
+                    }
+                });
+            } catch (error) {
+                console.error("Firebase connection error:", error);
+                listContainer.innerHTML = '<p class="text-[11px] text-red-500 italic py-2 text-center">クラウド同期エラー</p>';
+            }
+        }
+
+        // リアルタイムプラン取得（RULE 1 & RULE 2）
+        let plansUnsubscribe = null;
+        function setupPlansListener() {
+            if (!db || !user) return;
+            
+            // RULE 1: パブリックデータ用厳格パス
+            const plansRef = collection(db, 'artifacts', appId, 'public', 'data', 'saved_plans');
+            
+            // RULE 2: No Complex Queries (メモリ内ソート)
+            plansUnsubscribe = onSnapshot(plansRef, (snapshot) => {
+                const plans = [];
+                snapshot.forEach(doc => {
+                    plans.push({ id: doc.id, ...doc.data() });
+                });
+                
+                // メモリ内での時間ソート
+                plans.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+                renderSavedPlansList(plans);
+            }, (error) => {
+                console.error("Error loading plans:", error);
+                showToast("プラン一覧の同期に失敗しました", "fa-circle-exclamation text-red-400");
+            });
+        }
+
+        // 保存済みプランリストのUI描画
+        function renderSavedPlansList(plans) {
+            const listContainer = document.getElementById('saved-plans-list');
+            if (plans.length === 0) {
+                listContainer.innerHTML = '<p class="text-[11px] text-slate-400 italic py-2 text-center">保存されたプランはありません。</p>';
+                return;
+            }
+
+            listContainer.innerHTML = '';
+            plans.forEach(plan => {
+                const item = document.createElement('div');
+                item.className = "flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-100 hover:bg-slate-100 transition-colors";
+                
+                const nameSpan = document.createElement('span');
+                nameSpan.className = "font-medium truncate max-w-[150px] text-[11px]";
+                nameSpan.textContent = plan.name;
+                nameSpan.title = plan.name;
+                
+                const btnGroup = document.createElement('div');
+                btnGroup.className = "flex gap-1 shrink-0";
+                
+                // ロードボタン
+                const loadBtn = document.createElement('button');
+                loadBtn.className = "px-2 py-0.5 rounded bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-[10px] transition-colors";
+                loadBtn.textContent = "読込";
+                loadBtn.onclick = () => loadPlanData(plan.objects, plan.name);
+                
+                // 削除ボタン
+                const delBtn = document.createElement('button');
+                delBtn.className = "px-1.5 py-0.5 rounded bg-red-50 hover:bg-red-100 text-red-600 text-[10px] transition-colors";
+                delBtn.innerHTML = '<i class="fa-solid fa-trash-can text-[9px]"></i>';
+                delBtn.onclick = () => deletePlanCloud(plan.id, plan.name);
+                
+                btnGroup.appendChild(loadBtn);
+                btnGroup.appendChild(delBtn);
+                
+                item.appendChild(nameSpan);
+                item.appendChild(btnGroup);
+                listContainer.appendChild(item);
+            });
+        }
+
+        // クラウドへプランを新規保存（RULE 3）
+        async function savePlanCloud() {
+            if (!db || !user) {
+                showToast("同期サーバーがオフラインです。PCへの保存をご利用ください", "fa-circle-exclamation text-amber-500");
+                return;
+            }
+
+            const input = document.getElementById('plan-name-input');
+            const name = input.value.trim();
+            if (!name) {
+                showToast("プラン名を入力してください", "fa-circle-exclamation text-amber-500");
+                return;
+            }
+
+            const serializedObjects = objects.map(obj => ({
+                id: obj.id,
+                type: obj.type,
+                name: obj.name,
+                x: obj.x,
+                y: obj.y,
+                w: obj.w,
+                h: obj.h,
+                angle: obj.angle,
+                color: obj.color,
+                borderColor: obj.borderColor,
+                icon: obj.icon
+            }));
+
+            try {
+                const plansRef = collection(db, 'artifacts', appId, 'public', 'data', 'saved_plans');
+                await addDoc(plansRef, {
+                    name: name,
+                    objects: serializedObjects,
+                    createdAt: Date.now(),
+                    createdBy: user.uid
+                });
+
+                input.value = ''; // 入力欄をリセット
+                showToast(`プラン「${name}」をクラウドに保存しました！`, "fa-cloud-arrow-up text-indigo-400");
+            } catch (error) {
+                console.error("Save failed:", error);
+                showToast("プランの保存に失敗しました", "fa-circle-exclamation text-red-400");
+            }
+        }
+
+        // クラウドのプランを削除（RULE 3）
+        async function deletePlanCloud(planId, planName) {
+            if (!db || !user) return;
+            try {
+                const planDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'saved_plans', planId);
+                await deleteDoc(planDocRef);
+                showToast(`プラン「${planName}」を削除しました`, "fa-trash-can text-red-400");
+            } catch (error) {
+                console.error("Delete failed:", error);
+                showToast("削除に失敗しました", "fa-circle-exclamation text-red-400");
+            }
+        }
+
+        // PC（ローカル）へJSONファイル形式でエクスポート
+        function exportPlanFile() {
+            const serializedObjects = objects.map(obj => ({
+                id: obj.id,
+                type: obj.type,
+                name: obj.name,
+                x: obj.x,
+                y: obj.y,
+                w: obj.w,
+                h: obj.h,
+                angle: obj.angle,
+                color: obj.color,
+                borderColor: obj.borderColor,
+                icon: obj.icon
+            }));
+
+            const dataStr = JSON.stringify({
+                version: "2.2",
+                objects: serializedObjects
+            }, null, 2);
+
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', 'nk_office_layout_plan.json');
+            linkElement.click();
+            showToast("プランをPCにダウンロードしました！", "fa-file-arrow-down text-emerald-400");
+        }
+
+        // ファイル入力のトリガー
+        function triggerFileInput() {
+            document.getElementById('plan-file-input').click();
+        }
+
+        // PCのJSONファイルからインポート
+        function importPlanFile(event) {
+            const input = event.target;
+            if (!input.files || input.files.length === 0) return;
+            
+            const file = input.files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (data && data.objects && Array.isArray(data.objects)) {
+                        loadPlanData(data.objects, file.name.replace('.json', ''));
+                    } else {
+                        showToast("無効なファイル形式です", "fa-circle-exclamation text-red-400");
+                    }
+                } catch (err) {
+                    console.error(err);
+                    showToast("ファイルの解析に失敗しました", "fa-circle-exclamation text-red-400");
+                }
+            };
+            reader.readAsText(file);
+            input.value = '';
+        }
+
+        // プランオブジェクトをキャンバスに反映
+        function loadPlanData(planObjects, planName) {
+            if (!planObjects || !Array.isArray(planObjects)) return;
+            
+            objects = planObjects.map(obj => {
+                const spec = FURNITURE_TYPES[obj.type] || FURNITURE_TYPES.solo_desk;
+                return {
+                    id: obj.id || `${obj.type}_${Date.now()}_${Math.random()}`,
+                    type: obj.type,
+                    name: obj.name || spec.name,
+                    x: Number(obj.x),
+                    y: Number(obj.y),
+                    w: Number(obj.w),
+                    h: Number(obj.h),
+                    angle: Number(obj.angle || 0),
+                    color: obj.color || spec.color,
+                    borderColor: obj.borderColor || spec.borderColor,
+                    icon: obj.icon || spec.icon
+                };
+            });
+
+            selectedObject = null;
+            updateSelectionUI();
+            checkRequirements();
+            draw();
+            showToast(`プラン「${planName}」をロードしました！`);
+        }
+
+        // トースト通知メッセージ表示
         function showToast(message, iconClass = "fa-circle-check text-emerald-400") {
             const toast = document.getElementById('toast');
             const icon = document.getElementById('toast-icon');
@@ -417,17 +801,16 @@
             }
         }
 
-        // 家具を追加
+        // 新しい家具を追加
         function addFurniture(type) {
             const spec = FURNITURE_TYPES[type];
             if (!spec) return;
 
-            // 画面の中央付近に配置
             const newObj = {
                 id: `${type}_${Date.now()}`,
                 type: type,
                 name: spec.name,
-                x: ORIGIN_X + 2 * SCALE,
+                x: ORIGIN_X + 2.5 * SCALE,
                 y: ORIGIN_Y + 2 * SCALE,
                 w: spec.w * SCALE,
                 h: spec.h * SCALE,
@@ -445,9 +828,128 @@
             showToast(`${spec.name} を追加しました`);
         }
 
-        // 要件達成チェック
+        // 寸法表示の切り替えトグル (新規機能)
+        function toggleDimensions() {
+            showDimensions = !showDimensions;
+            const btn = document.getElementById('btn-dimensions');
+            const span = btn.querySelector('span');
+            
+            if (showDimensions) {
+                btn.classList.remove('bg-slate-100', 'text-slate-700', 'border-slate-200');
+                btn.classList.add('bg-indigo-50', 'text-indigo-700', 'border-indigo-200');
+                span.textContent = "寸法表示: ON";
+                showToast("ミリメートル(mm)寸法表示をONにしました", "fa-ruler text-indigo-400");
+            } else {
+                btn.classList.add('bg-slate-100', 'text-slate-700', 'border-slate-200');
+                btn.classList.remove('bg-indigo-50', 'text-indigo-700', 'border-indigo-200');
+                span.textContent = "寸法表示: OFF";
+                showToast("寸法表示をOFFにしました");
+            }
+            draw();
+        }
+
+        // Gemini AI を用いたレイアウト自動分析アドバイザー (新規機能)
+        async function analyzeLayoutWithAI() {
+            const btn = document.getElementById('btn-ai-analyze');
+            const output = document.getElementById('ai-advice-output');
+            
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner animate-spin mr-1.5"></i> 診断中...';
+            output.innerHTML = `
+                <div class="flex flex-col items-center justify-center py-10 text-slate-400">
+                    <i class="fa-solid fa-brain text-2xl animate-pulse text-indigo-500 mb-2"></i>
+                    <p class="text-[11px] text-center">現在の配置データをGemini AIに送信中...<br>プロのインテリア視点で評価しています。</p>
+                </div>
+            `;
+
+            // 配置状況テキストの作成
+            const roomInfo = "部屋全体のサイズ：横11.2m × 縦5.0m (41.25㎡、12.47坪)。右側の幅3.8mエリアにはEV、WC、給湯があります。また北・南・西の壁沿いには天井下が下がった「梁（幅20cm）」があります。";
+            const layoutDetails = objects.map(o => {
+                const w_mm = Math.round((o.w / SCALE) * 1000);
+                const h_mm = Math.round((o.h / SCALE) * 1000);
+                return `- ${o.name} (サイズ: ${w_mm}mm × ${h_mm}mm, 配置位置 X: ${(o.x/SCALE).toFixed(2)}m, Y: ${(o.y/SCALE).toFixed(2)}m)`;
+            }).join('\n');
+            
+            const userQuery = `
+あなたは一流のプロのオフィスインテリアデザイナーです。以下のオフィスレイアウトの配置データから、動線の美しさ、梁・柱の干渉、使いやすさの観点から総合診断とアドバイスをお願いします。
+
+【オフィス設計環境】
+${roomInfo}
+
+【現在の家具配置状況】
+${layoutDetails || "家具がまだキャンバス内に配置されていません。"}
+
+【出力形式要件】
+1. 現在の配置の「優れている良い点」を2つ、デザイナー目線で褒めてください。
+2. 梁や柱の干渉（壁際のグレーの梁の下に背の高い棚やロッカーが重なっていないかなど）、動線の詰まり（EVやトイレ付近の動線など）の問題点、あるいは改善点があれば、プロとして論理的に指摘してください。
+3. 今すぐ試せる、具体的なレイアウト改善のアドバイスを提示してください。
+
+※ 文章は親しみやすく、かつプロとしての専門性にあふれたアドバイスとして日本語で簡潔にまとめてください。
+※ 出力はHTMLタグ（<strong>や<p>、<ul class="list-disc pl-4 space-y-1">など）で美しく構造化して出力してください。CSSクラスはTailwindを使って自由におしゃれに整えてください。
+`;
+
+            const systemPrompt = "あなたはユーザーのCAD図面配置から空間のアドバイスを行うプロフェッショナルなAIオフィスインテリアデザイナーです。ユーザーの気持ちに寄り添い、具体的で役立つプロのアドバイスを日本語で行ってください。";
+
+            const apiKey = ""; // Canvas環境で自動注入されるため、空文字をセット。
+            const maxRetries = 5;
+            let delay = 1000;
+            let success = false;
+            let resultText = "";
+
+            for (let attempt = 0; attempt < maxRetries; attempt++) {
+                try {
+                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{ parts: [{ text: userQuery }] }],
+                            systemInstruction: { parts: [{ text: systemPrompt }] }
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`API error: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    resultText = data.candidates?.[0]?.content?.parts?.[0]?.text || "診断が空でした。";
+                    success = true;
+                    break;
+                } catch (error) {
+                    console.error(`Attempt ${attempt + 1} failed:`, error);
+                    if (attempt === maxRetries - 1) {
+                        resultText = "サーバーとの通信が失敗しました。配置データを少し変更して再度お試しいただくか、しばらく時間をおいてください。";
+                    } else {
+                        await new Promise(res => setTimeout(res, delay));
+                        delay *= 2; // 指数バックオフ
+                    }
+                }
+            }
+
+            // UIを更新
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles mr-1.5"></i> AIレイアウト診断を実行';
+            
+            if (success) {
+                output.innerHTML = `
+                    <div class="prose prose-sm text-[11px] leading-relaxed text-slate-700">
+                        ${resultText}
+                    </div>
+                `;
+                showToast("AI診断が完了しました！", "fa-brain text-indigo-400");
+            } else {
+                output.innerHTML = `
+                    <div class="p-3 bg-red-50 border border-red-200 rounded-lg text-xs text-red-700 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-exclamation text-base shrink-0"></i>
+                        <span>${resultText}</span>
+                    </div>
+                `;
+            }
+        }
+
+        // 要件チェックの自動判定
         function checkRequirements() {
-            const counts = { desk: 0, solo_desk: 0, warehouse: 0, meeting: 0, partition: 0, locker: 0 };
+            const counts = { desk: 0, solo_desk: 0, warehouse: 0, meeting: 0, partition: 0, locker: 0, shelf: 0 };
             
             objects.forEach(obj => {
                 if (obj.type in counts) {
@@ -489,21 +991,23 @@
             }
         }
 
-        // 選択中の家具の回転
+        // 家具の回転
         function rotateSelected() {
             if (!selectedObject) return;
             selectedObject.angle = (selectedObject.angle + 90) % 360;
             
-            // 幅と高さをスワップ
-            const temp = selectedObject.w;
-            selectedObject.w = selectedObject.h;
-            selectedObject.h = temp;
+            // 幅と高さをスワップ (正方形でなければ)
+            if (selectedObject.w !== selectedObject.h) {
+                const temp = selectedObject.w;
+                selectedObject.w = selectedObject.h;
+                selectedObject.h = temp;
+            }
 
             draw();
             showToast("家具を90度回転しました");
         }
 
-        // 選択中の家具の削除
+        // 家具の削除
         function deleteSelected() {
             if (!selectedObject) return;
             objects = objects.filter(o => o.id !== selectedObject.id);
@@ -524,7 +1028,7 @@
             showToast("レイアウトを全消去しました", "fa-arrow-rotate-left text-red-400");
         }
 
-        // 選択状態によるUIアップデート
+        // 選択された際の上部編集ボタン群の制御
         function updateSelectionUI() {
             if (selectedObject) {
                 btnRotate.disabled = false;
@@ -545,21 +1049,19 @@
             }
         }
 
-        // ドラッグ制限（壁の中に綺麗に収める：EVホール等も含めた部屋全体の有効内壁を境界とします）
+        // 外壁飛び出し防止
         function constrainPosition(obj) {
             const minX = ORIGIN_X;
             const maxX = ORIGIN_X + ROOM_WIDTH - obj.w;
             const minY = ORIGIN_Y;
             const maxY = ORIGIN_Y + ROOM_HEIGHT - obj.h;
 
-            // 部屋全体で自由に配置できるように境界線を制限
             obj.x = Math.max(minX, Math.min(obj.x, maxX));
             obj.y = Math.max(minY, Math.min(obj.y, maxY));
         }
 
-        // 描画コアロジック
+        // メイン描画処理
         function draw() {
-            // 背景クリア
             ctx.fillStyle = '#ffffff';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -579,10 +1081,10 @@
                 ctx.stroke();
             }
 
-            // 2. 梁（梁ハッチング）と柱（コラム）の正確な描写
+            // 2. 梁と柱の正確な描写
             drawBeamsAndColumns();
 
-            // 3. 固定オフィス構造（右端のEV・EVホール・トイレ・WCに密着した給湯ゾーン）
+            // 3. 固定オフィス構造（右端のEV・EVホール・トイレ・給湯ゾーン）
             drawFixedInfrastructure();
 
             // 4. 配置された家具の描画
@@ -597,27 +1099,70 @@
                 // 角丸四角形として描画
                 drawRoundRect(ctx, obj.x, obj.y, obj.w, obj.h, 6, true, true);
 
-                // アイコン & ラベルの描画
+                // 椅子の背もたれ方向（向き）の表現を追加
+                if (obj.type === 'chair') {
+                    ctx.strokeStyle = obj.borderColor;
+                    ctx.lineWidth = 3;
+                    ctx.beginPath();
+                    // angle 0:下, 90:左, 180:上, 270:右 に背もたれの厚み線を引く
+                    if (obj.angle === 0) {
+                        ctx.moveTo(obj.x + 4, obj.y + obj.h - 3);
+                        ctx.lineTo(obj.x + obj.w - 4, obj.y + obj.h - 3);
+                    } else if (obj.angle === 90) {
+                        ctx.moveTo(obj.x + 3, obj.y + 4);
+                        ctx.lineTo(obj.x + 3, obj.y + obj.h - 4);
+                    } else if (obj.angle === 180) {
+                        ctx.moveTo(obj.x + 4, obj.y + 3);
+                        ctx.lineTo(obj.x + obj.w - 4, obj.y + 3);
+                    } else if (obj.angle === 270) {
+                        ctx.moveTo(obj.x + obj.w - 3, obj.y + 4);
+                        ctx.lineTo(obj.x + obj.w - 3, obj.y + obj.h - 4);
+                    }
+                    ctx.stroke();
+                }
+
+                // アイコンの描画
                 ctx.fillStyle = isSelected ? '#312e81' : '#1e293b';
                 ctx.font = 'bold 10px "Noto Sans JP"';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                
-                // アイコンを中央に
                 ctx.fillText(obj.icon, obj.x + obj.w / 2, obj.y + obj.h / 2 - 6);
                 
-                // 省略表記のラベル
+                // ラベル
                 ctx.font = '500 8px "Noto Sans JP"';
                 let label = obj.name;
                 if (obj.type === 'solo_desk') label = '1人デスク';
                 if (obj.type === 'desk') label = 'デスク (4名)';
+                if (obj.type === 'chair') label = 'チェア';
                 if (obj.type === 'meeting') label = '会議テーブル';
                 if (obj.type === 'partition') label = '仕切り';
                 if (obj.type === 'warehouse') label = '倉庫 (3.0㎡)';
                 if (obj.type === 'locker') label = 'ロッカー';
+                if (obj.type === 'shelf') label = '収納棚';
                 ctx.fillText(label, obj.x + obj.w / 2, obj.y + obj.h / 2 + 10);
 
-                // 選択中のマーク（破線の外枠を追加）
+                // リアルタイム寸法表示 (新規機能 - ミリメートル表記)
+                if (showDimensions) {
+                    ctx.save();
+                    ctx.fillStyle = "rgba(15, 23, 42, 0.8)";
+                    ctx.font = 'bold 8.5px "Noto Sans JP"';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    
+                    const w_mm = Math.round((obj.w / SCALE) * 1000);
+                    const h_mm = Math.round((obj.h / SCALE) * 1000);
+                    const dimText = `${w_mm} × ${h_mm}`;
+                    
+                    const textWidth = ctx.measureText(dimText).width + 6;
+                    ctx.fillStyle = "rgba(15, 23, 42, 0.85)";
+                    drawRoundRect(ctx, obj.x + obj.w / 2 - textWidth / 2, obj.y + obj.h - 13, textWidth, 10, 2, true, false);
+                    
+                    ctx.fillStyle = "#ffffff";
+                    ctx.fillText(dimText, obj.x + obj.w / 2, obj.y + obj.h - 8);
+                    ctx.restore();
+                }
+
+                // 選択マーカー
                 if (isSelected) {
                     ctx.strokeStyle = '#4f46e5';
                     ctx.lineWidth = 1;
@@ -627,17 +1172,17 @@
                 }
             });
 
-            // 5. 外壁の描画（一番上に描画することで、梁や柱のハッチングを綺麗にトリミング）
+            // 5. 外壁の描画
             drawExteriorWalls();
         }
 
         // 梁（梁ハッチング）と柱（コラム）の正確な描写
         function drawBeamsAndColumns() {
-            ctx.fillStyle = "rgba(100, 116, 139, 0.15)"; // 梁：薄いグレーストライプ調を模した塗り
+            ctx.fillStyle = "rgba(100, 116, 139, 0.15)";
             ctx.strokeStyle = "rgba(100, 116, 139, 0.25)";
             ctx.lineWidth = 1;
 
-            const beamDepth = 0.20 * SCALE; // 梁の出幅 (約15〜20cm)
+            const beamDepth = 0.20 * SCALE; 
 
             // 1. 北側の梁（上部壁沿い全体）
             ctx.fillRect(ORIGIN_X, ORIGIN_Y, ROOM_WIDTH, beamDepth);
@@ -661,10 +1206,10 @@
             ctx.closePath();
             ctx.fill();
 
-            // 4. 正確に図面から読み取った「柱」の配置
-            ctx.fillStyle = "rgba(100, 116, 139, 0.35)"; // 柱は少し濃い目のグレー
+            // 4. 「柱」の配置
+            ctx.fillStyle = "rgba(100, 116, 139, 0.35)";
 
-            // 柱①: 北中央（EVのすぐ左付近、梁からさらに突出する柱）
+            // 柱①: 北中央
             const colN_X = ORIGIN_X + 5.7 * SCALE;
             const colN_Y = ORIGIN_Y;
             const colN_W = 0.5 * SCALE;
@@ -672,7 +1217,7 @@
             ctx.fillRect(colN_X, colN_Y, colN_W, colN_H);
             ctx.strokeRect(colN_X, colN_Y, colN_W, colN_H);
 
-            // 柱②: 南中央（WC・給湯の左隣付近、梁からさらに突出する柱）
+            // 柱②: 南中央
             const colS_X = ORIGIN_X + 5.6 * SCALE;
             const colS_Y = ORIGIN_Y + ROOM_HEIGHT - 0.45 * SCALE;
             const colS_W = 0.5 * SCALE;
@@ -688,7 +1233,7 @@
             ctx.fillRect(bottomLeftX, bottomLeftY - 0.4 * SCALE, 0.4 * SCALE, 0.4 * SCALE);
             ctx.strokeRect(bottomLeftX, bottomLeftY - 0.4 * SCALE, 0.4 * SCALE, 0.4 * SCALE);
 
-            // ラベル表示
+            // ラベル
             ctx.fillStyle = '#64748b';
             ctx.font = 'bold 8px "Noto Sans JP"';
             ctx.textAlign = 'center';
@@ -697,7 +1242,7 @@
             ctx.fillText("柱", colS_X + colS_W/2, colS_Y - 5);
         }
 
-        // 梁のハッチング(斜線)を描画するヘルパー
+        // 梁のストライプパターン
         function drawHatchingPattern(x, y, w, h) {
             ctx.save();
             ctx.strokeStyle = "rgba(100, 116, 139, 0.2)";
@@ -714,7 +1259,7 @@
 
         // 外壁の描画
         function drawExteriorWalls() {
-            ctx.strokeStyle = '#1e293b'; // ダークスレート
+            ctx.strokeStyle = '#1e293b'; 
             ctx.lineWidth = 5;
             ctx.lineJoin = 'miter';
 
@@ -724,48 +1269,41 @@
             const bottomLeftY = ORIGIN_Y + ROOM_HEIGHT;
 
             ctx.beginPath();
-            // 北壁
             ctx.moveTo(topLeftX, topLeftY);
             ctx.lineTo(ORIGIN_X + ROOM_WIDTH, ORIGIN_Y);
-            // 東壁
             ctx.lineTo(ORIGIN_X + ROOM_WIDTH, ORIGIN_Y + ROOM_HEIGHT);
-            // 南壁
             ctx.lineTo(bottomLeftX, bottomLeftY);
-            // 西壁（斜め）
             ctx.lineTo(topLeftX, topLeftY);
             ctx.stroke();
 
-            // 窓の表現
-            ctx.strokeStyle = '#bae6fd'; // 淡いスカイブルー
+            // 窓
+            ctx.strokeStyle = '#bae6fd'; 
             ctx.lineWidth = 3;
 
-            // 西側大窓
-            ctx.beginPath();
+            ctx.beginPath(); // 西側大窓
             ctx.moveTo(topLeftX + (bottomLeftX - topLeftX) * 0.2, topLeftY + (bottomLeftY - topLeftY) * 0.2);
             ctx.lineTo(topLeftX + (bottomLeftX - topLeftX) * 0.8, topLeftY + (bottomLeftY - topLeftY) * 0.8);
             ctx.stroke();
 
-            // 北側窓1
-            ctx.beginPath();
+            ctx.beginPath(); // 北側窓1
             ctx.moveTo(ORIGIN_X + 1 * SCALE, ORIGIN_Y);
             ctx.lineTo(ORIGIN_X + 2.5 * SCALE, ORIGIN_Y);
             ctx.stroke();
 
-            // 北側窓2
-            ctx.beginPath();
+            ctx.beginPath(); // 北側窓2
             ctx.moveTo(ORIGIN_X + 4 * SCALE, ORIGIN_Y);
             ctx.lineTo(ORIGIN_X + 5.5 * SCALE, ORIGIN_Y);
             ctx.stroke();
 
-            // 南側窓
-            ctx.beginPath();
+            ctx.beginPath(); // 南側窓
             ctx.moveTo(ORIGIN_X + 3 * SCALE, ORIGIN_Y + ROOM_HEIGHT);
             ctx.lineTo(ORIGIN_X + 4.5 * SCALE, ORIGIN_Y + ROOM_HEIGHT);
             ctx.stroke();
 
-            // 寸法・情報
+            // ラベル
             ctx.fillStyle = '#475569';
             ctx.font = '10px "Noto Sans JP"';
+            ctx.textBaseline = 'middle';
             ctx.textAlign = 'left';
             ctx.fillText("西側大窓 (採光)", ORIGIN_X + 0.3 * SCALE, ORIGIN_Y + ROOM_HEIGHT / 2);
             ctx.fillText("← 約11.2 m →", ORIGIN_X + ROOM_WIDTH/2 - 30, ORIGIN_Y + ROOM_HEIGHT + 20);
@@ -778,28 +1316,24 @@
             ctx.fillText("(41.25㎡)", ORIGIN_X + 3.0 * SCALE, ORIGIN_Y + ROOM_HEIGHT / 2 + 15);
         }
 
-        // 固定インフラ（EV・トイレ・WCにくっつけた給湯・ドアなど）の描画
+        // 固定インフラ（EV・WC・WC隣接給湯）の描画
         function drawFixedInfrastructure() {
-            const rightStart = ORIGIN_X + 7.4 * SCALE; // 固定ゾーンの起点
+            const rightStart = ORIGIN_X + 7.4 * SCALE;
 
-            // 1. エリア背景（固定エリアを薄いグレーに）
             ctx.fillStyle = 'rgba(248, 250, 252, 0.4)';
             ctx.fillRect(rightStart, ORIGIN_Y, ROOM_WIDTH - (rightStart - ORIGIN_X), ROOM_HEIGHT);
 
-            // 2. 境界壁（執務スペースとの間仕切り壁）
             ctx.strokeStyle = '#334155';
             ctx.lineWidth = 4;
             
-            // EVの左壁
-            ctx.beginPath();
+            ctx.beginPath(); // EV壁
             ctx.moveTo(rightStart, ORIGIN_Y);
             ctx.lineTo(rightStart, ORIGIN_Y + 2.1 * SCALE);
             ctx.lineTo(rightStart + 2.0 * SCALE, ORIGIN_Y + 2.1 * SCALE);
             ctx.stroke();
 
-            // WC壁
             const wcStartX = rightStart + 2.5 * SCALE;
-            ctx.beginPath();
+            ctx.beginPath(); // WC壁
             ctx.moveTo(wcStartX, ORIGIN_Y + 2.1 * SCALE);
             ctx.lineTo(wcStartX, ORIGIN_Y + ROOM_HEIGHT);
             ctx.stroke();
@@ -809,7 +1343,7 @@
             ctx.lineTo(rightStart + 3.8 * SCALE, ORIGIN_Y + 3.2 * SCALE);
             ctx.stroke();
 
-            // 3. EV (エレベーター)
+            // EV
             const evX = rightStart + 0.1 * SCALE;
             const evY = ORIGIN_Y + 0.1 * SCALE;
             const evW = 1.9 * SCALE;
@@ -834,7 +1368,7 @@
             ctx.textAlign = 'center';
             ctx.fillText("EV", evX + evW/2, evY + evH/2);
 
-            // 4. EVホール
+            // EVホール
             const evHallX = rightStart + 2.1 * SCALE;
             const evHallW = 1.7 * SCALE;
             ctx.fillStyle = '#f1f5f9';
@@ -843,7 +1377,7 @@
             ctx.font = 'bold 10px "Noto Sans JP"';
             ctx.fillText("EVホール", evHallX + evHallW/2, ORIGIN_Y + 0.6 * SCALE);
 
-            // 5. PS (パイプスペース)
+            // PS
             const psX = rightStart + 3.1 * SCALE;
             const psY = ORIGIN_Y + 2.1 * SCALE;
             const psW = 0.7 * SCALE;
@@ -860,12 +1394,11 @@
             ctx.moveTo(psX+psW, psY); ctx.lineTo(psX, psY+psH);
             ctx.stroke();
             ctx.setLineDash([]);
-            
             ctx.fillStyle = '#475569';
             ctx.font = 'bold 9px "Noto Sans JP"';
             ctx.fillText("PS", psX + psW/2, psY + psH/2);
 
-            // 6. トイレ / WC (便座デザイン付き)
+            // WC
             const toiletX = wcStartX;
             const toiletY = ORIGIN_Y + 3.2 * SCALE;
             const toiletW = 1.3 * SCALE;
@@ -875,33 +1408,29 @@
             ctx.strokeStyle = '#64748b';
             ctx.strokeRect(toiletX, toiletY, toiletW, toiletH);
             
-            // 便器簡易マーク
             ctx.fillStyle = '#ffffff';
             ctx.strokeStyle = '#94a3b8';
             drawRoundRect(ctx, toiletX + 0.4*SCALE, toiletY + 0.9*SCALE, 0.5*SCALE, 0.7*SCALE, 10, true, true);
             ctx.strokeRect(toiletX + 0.4*SCALE, toiletY + 0.6*SCALE, 0.5*SCALE, 0.3*SCALE);
-            
             ctx.fillStyle = '#475569';
             ctx.font = 'bold 10px "Noto Sans JP"';
             ctx.fillText("WC", toiletX + 0.65*SCALE, toiletY + 0.3 * SCALE);
 
-            // 7. 給湯エリア (WCのすぐ左隣にくっつけて配置、右側の通路エリアを開放)
-            // 図面通り WC の左壁（wcStartX）にぴったりくっつけます。
+            // 給湯エリア (WCに隣接)
             const kitchenW = 1.2 * SCALE;
             const kitchenH = 0.8 * SCALE;
-            const kitchenX = wcStartX - kitchenW; // WCの左に密着
-            const kitchenY = ORIGIN_Y + ROOM_HEIGHT - kitchenH; // 下側の壁に密着
+            const kitchenX = wcStartX - kitchenW; 
+            const kitchenY = ORIGIN_Y + ROOM_HEIGHT - kitchenH; 
             
             ctx.fillStyle = '#e2e8f0';
             ctx.fillRect(kitchenX, kitchenY, kitchenW, kitchenH);
             ctx.strokeStyle = '#64748b';
             ctx.strokeRect(kitchenX, kitchenY, kitchenW, kitchenH);
             
-            // 流し台とコンロのマーク
             ctx.fillStyle = '#ffffff';
-            ctx.fillRect(kitchenX + 0.1*SCALE, kitchenY + 0.1*SCALE, 0.4*SCALE, 0.5*SCALE); // 流しシンク
+            ctx.fillRect(kitchenX + 0.1*SCALE, kitchenY + 0.1*SCALE, 0.4*SCALE, 0.5*SCALE);
             ctx.strokeRect(kitchenX + 0.1*SCALE, kitchenY + 0.1*SCALE, 0.4*SCALE, 0.5*SCALE);
-            ctx.beginPath(); // コンロ
+            ctx.beginPath(); 
             ctx.arc(kitchenX + 0.8*SCALE, kitchenY + 0.35*SCALE, 0.15*SCALE, 0, Math.PI*2);
             ctx.stroke();
 
@@ -909,11 +1438,10 @@
             ctx.font = 'bold 9px "Noto Sans JP"';
             ctx.fillText("給湯", kitchenX + kitchenW/2 + 10, kitchenY + kitchenH/2 + 15);
 
-            // 8. ドアの開閉（円弧）
+            // ドア開閉線
             ctx.strokeStyle = '#94a3b8';
             ctx.lineWidth = 1;
             
-            // 入口ドア (EVホールから室内)
             const d1X = wcStartX;
             const d1Y = ORIGIN_Y + 1.2 * SCALE;
             ctx.beginPath();
@@ -921,7 +1449,6 @@
             ctx.lineTo(d1X, d1Y);
             ctx.stroke();
 
-            // トイレドア
             const d2X = wcStartX;
             const d2Y = ORIGIN_Y + 3.2 * SCALE;
             ctx.beginPath();
@@ -930,7 +1457,7 @@
             ctx.stroke();
         }
 
-        // 角丸四角形ユーティリティ
+        // 角丸四角形描画用ヘルパー
         function drawRoundRect(context, x, y, width, height, radius, fill, stroke) {
             if (typeof radius === 'undefined') radius = 5;
             if (typeof radius === 'number') radius = {tl: radius, tr: radius, br: radius, bl: radius};
@@ -955,9 +1482,8 @@
             if (stroke) context.stroke();
         }
 
-        // イベントリスナー設定
+        // 各種イベントリスナー登録
         function setupEventListeners() {
-            // マウス＆タッチドラッグ
             canvas.addEventListener('mousedown', startDrag);
             canvas.addEventListener('mousemove', drag);
             canvas.addEventListener('mouseup', endDrag);
@@ -987,7 +1513,6 @@
             }, { passive: true });
         }
 
-        // マウスポジション取得
         function getMousePos(e) {
             const rect = canvas.getBoundingClientRect();
             return {
@@ -996,11 +1521,8 @@
             };
         }
 
-        // ドラッグ開始
         function startDrag(e) {
             const pos = getMousePos(e);
-            
-            // クリックされたオブジェクトを探す（最前面を優先）
             let hit = null;
             for (let i = objects.length - 1; i >= 0; i--) {
                 const obj = objects[i];
@@ -1017,7 +1539,6 @@
                 dragOffsetX = pos.x - hit.x;
                 dragOffsetY = pos.y - hit.y;
                 
-                // 選択したものを最前面にする
                 objects = objects.filter(o => o.id !== hit.id);
                 objects.push(hit);
             } else {
@@ -1028,7 +1549,6 @@
             draw();
         }
 
-        // ドラッグ中
         function drag(e) {
             if (!isDragging || !selectedObject) return;
             const pos = getMousePos(e);
@@ -1040,7 +1560,6 @@
             draw();
         }
 
-        // ドラッグ終了
         function endDrag() {
             if (isDragging) {
                 isDragging = false;
@@ -1048,7 +1567,7 @@
             }
         }
 
-        // 画像としてエクスポート
+        // PNG画像としてエクスポート
         function exportAsImage() {
             const prevSelected = selectedObject;
             selectedObject = null;
@@ -1066,12 +1585,29 @@
                 showToast("レイアウト画像をダウンロードしました！", "fa-file-image text-emerald-400");
             } catch (err) {
                 console.error(err);
-                showToast("画像の生成に失敗しました（プレビュー制限）", "fa-circle-exclamation text-red-400");
+                showToast("画像の生成に失敗しました", "fa-circle-exclamation text-red-400");
             }
 
             selectedObject = prevSelected;
             draw();
         }
+
+        // HTML内のグローバル露出設定（ModuleスコープからHTML onclickがアクセスできるようにする）
+        window.applyPreset = applyPreset;
+        window.addFurniture = addFurniture;
+        window.rotateSelected = rotateSelected;
+        window.deleteSelected = deleteSelected;
+        window.resetLayout = resetLayout;
+        window.exportAsImage = exportAsImage;
+        window.savePlanCloud = savePlanCloud;
+        window.deletePlanCloud = deletePlanCloud;
+        window.loadPlanData = loadPlanData;
+        window.exportPlanFile = exportPlanFile;
+        window.triggerFileInput = triggerFileInput;
+        window.importPlanFile = importPlanFile;
+        window.toggleDimensions = toggleDimensions;
+        window.analyzeLayoutWithAI = analyzeLayoutWithAI;
+
     </script>
 </body>
 </html>
