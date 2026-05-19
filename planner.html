@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>12.47坪オフィス レイアウトシミュレーター Pro</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Noto Sans JP) -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: #f8fafc;
+        }
+        /* スムーズなドラッグのためのスタイル */
+        canvas {
+            cursor: grab;
+        }
+        canvas:active {
+            cursor: grabbing;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col text-slate-800">
+
+    <!-- ヘッダー -->
+    <header class="bg-slate-900 text-white py-4 px-6 shadow-md">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-indigo-600 p-2 rounded-lg">
+                    <i class="fa-solid fa-compass-drafting text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight">オフィスレイアウト・プランナー <span class="text-xs bg-indigo-500 text-white px-2 py-0.5 rounded ml-2">Ver 2.0</span></h1>
+                    <p class="text-xs text-slate-400">エヌケービル 3F (12.47坪 / 41.25㎡) 4名フリーアドレス計画</p>
+                </div>
+            </div>
+            <div class="flex gap-2 text-sm">
+                <span class="bg-slate-800 px-3 py-1 rounded-full text-slate-300 border border-slate-700">
+                    <i class="fa-solid fa-users text-indigo-400 mr-1"></i> 職員4名
+                </span>
+                <span class="bg-slate-800 px-3 py-1 rounded-full text-slate-300 border border-slate-700">
+                    <i class="fa-solid fa-chart-area text-indigo-400 mr-1"></i> 41.25 ㎡
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 lg:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- 左側：操作＆ナビゲーションパネル（4カラム） -->
+        <div class="lg:col-span-4 flex flex-col gap-6">
+            
+            <!-- 要件チェックリスト -->
+            <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-200">
+                <h2 class="text-base font-bold mb-3 flex items-center gap-2 text-slate-900">
+                    <i class="fa-solid fa-list-check text-indigo-600"></i> レイアウト要件
+                </h2>
+                <div class="space-y-3 text-sm">
+                    <div id="check-desk" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 border border-slate-100 transition-colors">
+                        <span class="flex items-center gap-2">
+                            <i class="fa-solid fa-circle-check text-slate-300 transition-colors"></i>
+                            <span>4名分執務席の確保 (島型 or 個別)</span>
+                        </span>
+                        <span class="text-xs font-semibold px-2 py-0.5 rounded bg-slate-200 text-slate-600">必須</span>
+                    </div>
+                    <div id="check-warehouse" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 border border-slate-100 transition-colors">
+                        <span class="flex items-center gap-2">
+                            <i class="fa-solid fa-circle-check text-slate-300 transition-colors"></i>
+                            <span>倉庫スペース (3㎡以上確保)</span>
+                        </span>
+                        <span class="text-xs font-semibold px-2 py-0.5 rounded bg-slate-200 text-slate-600">必須</span>
+                    </div>
+                    <div id="check-meeting" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 border border-slate-100 transition-colors">
+                        <span class="flex items-center gap-2">
+                            <i class="fa-solid fa-circle-check text-slate-300 transition-colors"></i>
+                            <span>会議用テーブル (1台)</span>
+                        </span>
+                        <span class="text-xs font-semibold px-2 py-0.5 rounded bg-slate-200 text-slate-600">必須</span>
+                    </div>
+                    <div id="check-partition" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 border border-slate-100 transition-colors">
+                        <span class="flex items-center gap-2">
+                            <i class="fa-solid fa-circle-check text-slate-300 transition-colors"></i>
+                            <span>会議室用パーティション</span>
+                        </span>
+                        <span class="text-xs font-semibold px-2 py-0.5 rounded bg-slate-200 text-slate-600">必須</span>
+                    </div>
+                    <div id="check-locker" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 border border-slate-100 transition-colors">
+                        <span class="flex items-center gap-2">
+                            <i class="fa-solid fa-circle-check text-slate-300 transition-colors"></i>
+                            <span>4人用ロッカーの設置</span>
+                        </span>
+                        <span class="text-xs font-semibold px-2 py-0.5 rounded bg-slate-200 text-slate-600">必須</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- プリセット配置案 -->
+            <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-200">
+                <h2 class="text-base font-bold mb-3 flex items-center gap-2 text-slate-900">
+                    <i class="fa-solid fa-wand-magic-sparkles text-indigo-600"></i> デザイナー推奨プラン
+                </h2>
+                <p class="text-xs text-slate-500 mb-4">クリックすると、図面内に家具が自動配置されます。そこから自由に微調整が可能です。</p>
+                <div class="grid grid-cols-1 gap-3">
+                    <button onclick="applyPreset('planA')" class="group flex flex-col items-start p-3.5 rounded-xl border-2 border-slate-200 hover:border-indigo-600 hover:bg-indigo-50/40 text-left transition-all">
+                        <div class="flex items-center justify-between w-full mb-1">
+                            <span class="font-bold text-slate-900 group-hover:text-indigo-600 text-sm">新プランA：執務スペース最大化</span>
+                            <span class="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">推奨</span>
+                        </div>
+                        <span class="text-xs text-slate-500">ロッカーをEVホール下の通路部分に逃がし、倉庫をWC横に隣接。梁や柱に干渉しないよう執務デスクを完璧に収めた王道プランです。</span>
+                    </button>
+                    <button onclick="applyPreset('planB')" class="group flex flex-col items-start p-3.5 rounded-xl border-2 border-slate-200 hover:border-indigo-600 hover:bg-indigo-50/40 text-left transition-all">
+                        <div class="flex items-center justify-between w-full mb-1">
+                            <span class="font-bold text-slate-900 group-hover:text-indigo-600 text-sm">新プランB：個人席＋島型ハイブリッド</span>
+                            <span class="text-[10px] bg-blue-100 text-blue-800 px-2 py-0.5 rounded font-bold">集中エリア</span>
+                        </div>
+                        <span class="text-xs text-slate-500">島型デスクに加え、新登場の「1人用デスク」を壁沿いに配置。フリーアドレスの中で、集中したい人と協働したい人を分ける最新トレンドです。</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 家具追加パネル -->
+            <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-200 flex-1">
+                <h2 class="text-base font-bold mb-3 flex items-center gap-2 text-slate-900">
+                    <i class="fa-solid fa-plus text-indigo-600"></i> 家具の追加（EVホール配置可）
+                </h2>
+                <p class="text-xs text-slate-500 mb-4">アイコンをクリックしてアイテムを図面に追加します。EVホールや給湯周辺を含め、どこにでも自由に配置可能です。</p>
+                <div class="grid grid-cols-2 gap-2 text-xs">
+                    <button onclick="addFurniture('solo_desk')" class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 active:bg-slate-100 transition-colors font-medium">
+                        <span class="w-6 h-6 rounded bg-amber-50 flex items-center justify-center text-amber-600">💻</span>
+                        <span>1人用デスク</span>
+                    </button>
+                    <button onclick="addFurniture('desk')" class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 active:bg-slate-100 transition-colors font-medium">
+                        <span class="w-6 h-6 rounded bg-amber-100 flex items-center justify-center text-amber-700">🖥️</span>
+                        <span>4人用デスク</span>
+                    </button>
+                    <button onclick="addFurniture('meeting')" class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 active:bg-slate-100 transition-colors font-medium">
+                        <span class="w-6 h-6 rounded bg-blue-100 flex items-center justify-center text-blue-700">🤝</span>
+                        <span>会議テーブル</span>
+                    </button>
+                    <button onclick="addFurniture('partition')" class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 active:bg-slate-100 transition-colors font-medium">
+                        <span class="w-6 h-6 rounded bg-slate-200 flex items-center justify-center text-slate-700">🚧</span>
+                        <span>パーティション</span>
+                    </button>
+                    <button onclick="addFurniture('warehouse')" class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 active:bg-slate-100 transition-colors font-medium">
+                        <span class="w-6 h-6 rounded bg-zinc-200 flex items-center justify-center text-zinc-700">📦</span>
+                        <span>3㎡倉庫</span>
+                    </button>
+                    <button onclick="addFurniture('locker')" class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 active:bg-slate-100 transition-colors font-medium">
+                        <span class="w-6 h-6 rounded bg-emerald-100 flex items-center justify-center text-emerald-700">🗄️</span>
+                        <span>4人用ロッカー</span>
+                    </button>
+                    <button onclick="addFurniture('plant')" class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 active:bg-slate-100 transition-colors font-medium">
+                        <span class="w-6 h-6 rounded bg-green-100 flex items-center justify-center text-green-700">🌿</span>
+                        <span>観葉植物</span>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- 右側：メインシミュレーター（8カラム） -->
+        <div class="lg:col-span-8 flex flex-col gap-4">
+            
+            <!-- キャンバスコントロール -->
+            <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200 flex flex-wrap justify-between items-center gap-4">
+                <div class="flex items-center gap-2">
+                    <span class="w-3.5 h-3.5 rounded-full bg-indigo-600 animate-pulse"></span>
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Live Canvas 2.0</span>
+                    <span class="text-xs text-slate-400 bg-slate-100 px-2 py-0.5 rounded">1マス = 50cm</span>
+                </div>
+                
+                <div class="flex items-center gap-2 flex-wrap">
+                    <button onclick="rotateSelected()" id="btn-rotate" disabled class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-400 font-medium text-xs flex items-center gap-1.5 transition-colors cursor-not-allowed">
+                        <i class="fa-solid fa-rotate-right"></i> 選択家具を回転 (90°)
+                    </button>
+                    <button onclick="deleteSelected()" id="btn-delete" disabled class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-400 font-medium text-xs flex items-center gap-1.5 transition-colors cursor-not-allowed">
+                        <i class="fa-solid fa-trash-can"></i> 削除
+                    </button>
+                    <div class="h-6 w-px bg-slate-200"></div>
+                    <button onclick="resetLayout()" class="px-3 py-1.5 rounded-lg bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 font-medium text-xs flex items-center gap-1.5 transition-colors">
+                        <i class="fa-solid fa-arrow-rotate-left"></i> 全リセット
+                    </button>
+                    <button onclick="exportAsImage()" class="px-3 py-1.5 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 font-medium text-xs flex items-center gap-1.5 shadow-sm transition-colors">
+                        <i class="fa-solid fa-file-image"></i> 画像で保存
+                    </button>
+                </div>
+            </div>
+
+            <!-- キャンバス本体 -->
+            <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200 flex flex-col items-center justify-center overflow-auto">
+                <div id="canvas-container" class="relative w-full max-w-[840px] border border-slate-200 rounded-lg overflow-hidden bg-[#fafafa]">
+                    <canvas id="officeCanvas" class="w-full h-auto block" width="840" height="420"></canvas>
+                </div>
+                
+                <!-- 操作ガイダンス -->
+                <div class="w-full flex flex-col sm:flex-row justify-between text-[11px] text-slate-400 mt-3 px-1 gap-2">
+                    <div class="flex items-center gap-4">
+                        <span><i class="fa-solid fa-mouse-pointer text-indigo-500 mr-1"></i> 家具をドラッグして配置</span>
+                        <span><i class="fa-solid fa-hand text-indigo-500 mr-1"></i> クリックで選択・回転・削除</span>
+                    </div>
+                    <div class="text-right">
+                        <span>※斜線部（梁・柱）や固定壁への重なりにご注意ください。</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- プラン解説カード -->
+            <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-5">
+                <h3 class="font-bold text-indigo-900 text-sm mb-2 flex items-center gap-1.5">
+                    <i class="fa-solid fa-circle-info"></i> 新しい設計図面とレイアウトのアドバイス
+                </h3>
+                <div class="text-xs text-indigo-950/80 space-y-2 leading-relaxed">
+                    <p>
+                        <strong>① 梁・柱との干渉を避ける：</strong> 壁沿い（北、南、西の斜め壁）に走る<strong>「梁（斜線の入ったグレー帯）」</strong>は、天井高が下がっています。背の高いロッカーやパーティションは梁の通らない中央側に配置し、デスク類を梁下に配置するのがセオリーです。また、突出した<strong>「柱」</strong>を避けるようにデスクを置くことで、オフィスがより幾何学的に美しく整います。
+                    </p>
+                    <p>
+                        <strong>② 給湯をWCに密着した効果：</strong> 給湯シンクがWCの左壁に完全に密着したことで、EVを降りてから室内への通路幅が広がり、約1.2m以上の有効スペースが新しく生まれました。ここを<strong>「パーソナルロッカー置き場」</strong>や、植栽を置いた<strong>「リフレッシュ空間」</strong>にすることで、メイン執務スペースを100%作業エリアとして贅沢に使用できます。
+                    </p>
+                    <p>
+                        <strong>③ 1人用デスクの活用法：</strong> 新しく追加された「1人用デスク（1.2m×0.7m）」は、南側や窓際の壁面に向かって設置すると、周りの視線が気にならない「ソロ集中ブース」として機能し、フリーアドレスの満足度が格段に上がります。
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- フッター -->
+    <footer class="bg-slate-900 text-slate-500 text-center py-6 border-t border-slate-800 text-xs mt-auto">
+        <p>© 2026 Office Layout Planner Pro. Designed by Professional Interior Consultant.</p>
+    </footer>
+
+    <!-- 通知モーダル -->
+    <div id="toast" class="fixed bottom-6 right-6 transform translate-y-20 opacity-0 pointer-events-none transition-all duration-300 bg-slate-950 text-white text-xs font-medium px-4 py-3 rounded-xl shadow-xl flex items-center gap-2 z-50">
+        <i id="toast-icon" class="fa-solid fa-circle-info text-indigo-400"></i>
+        <span id="toast-text">メッセージ</span>
+    </div>
+
+    <!-- JSロジック -->
+    <script>
+        const canvas = document.getElementById('officeCanvas');
+        const ctx = canvas.getContext('2d');
+        const btnRotate = document.getElementById('btn-rotate');
+        const btnDelete = document.getElementById('btn-delete');
+
+        // 定数定義 (スケール: 1メートル = 60ピクセル)
+        const SCALE = 60; 
+        const ORIGIN_X = 50;  // 図面描画のオフセット
+        const ORIGIN_Y = 50;
+        
+        // 部屋の有効範囲 (左上: ORIGIN_X, ORIGIN_Y から、全体サイズ 11.2m x 5.0m)
+        const ROOM_W_M = 11.2;
+        const ROOM_H_M = 5.0;
+        const ROOM_WIDTH = ROOM_W_M * SCALE; // 672px
+        const ROOM_HEIGHT = ROOM_H_M * SCALE; // 300px
+
+        // システムステート
+        let objects = [];
+        let selectedObject = null;
+        let isDragging = false;
+        let dragOffsetX = 0;
+        let dragOffsetY = 0;
+
+        // 家具の仕様定義 (1200mm x 700mm の1人用デスクを追加)
+        const FURNITURE_TYPES = {
+            solo_desk: {
+                name: "1人用デスク (1.2m x 0.7m)",
+                w: 1.2,
+                h: 0.7,
+                color: "rgba(251, 191, 36, 0.2)", // 明るい琥珀色
+                borderColor: "#b45309",
+                icon: "💻",
+                desc: "幅1.2m x 奥行き0.7mの標準的なオフィスデスク。壁面に沿った配置や集中席に最適。"
+            },
+            desk: {
+                name: "4人用フリーアドレスデスク",
+                w: 2.4, // メートル
+                h: 1.2,
+                color: "rgba(245, 158, 11, 0.15)", 
+                borderColor: "#d97706",
+                icon: "🖥️",
+                desc: "2.4m x 1.2m の広々とした島型デスク。職員4名がゆとりを持って座れます。"
+            },
+            meeting: {
+                name: "ミーティングテーブル",
+                w: 1.5,
+                h: 0.9,
+                color: "rgba(59, 130, 246, 0.15)", // 青
+                borderColor: "#2563eb",
+                icon: "🤝",
+                desc: "1.5m x 0.9m の打ち合わせ用テーブル。4名掛けに最適。"
+            },
+            partition: {
+                name: "パーティション",
+                w: 1.8,
+                h: 0.15,
+                color: "rgba(100, 116, 139, 0.3)", // スレート
+                borderColor: "#475569",
+                icon: "🚧",
+                desc: "会議室を区切るパーティション。動線とプライバシーを確保。"
+            },
+            warehouse: {
+                name: "3㎡ 倉庫",
+                w: 2.0,
+                h: 1.5, // 2m x 1.5m = 3㎡
+                color: "rgba(212, 212, 216, 0.35)", // グレー
+                borderColor: "#71717a",
+                icon: "📦",
+                desc: "要件を満たすジャスト3.0㎡の収納倉庫。"
+            },
+            locker: {
+                name: "4人用パーソナルロッカー",
+                w: 1.2,
+                h: 0.45,
+                color: "rgba(16, 185, 129, 0.15)", // エメラルド
+                borderColor: "#059669",
+                icon: "🗄️",
+                desc: "フリーアドレス時に必須となる、個人の荷物・書類を保管するロッカー。"
+            },
+            plant: {
+                name: "インドアグリーン",
+                w: 0.6,
+                h: 0.6,
+                color: "rgba(34, 197, 94, 0.15)", // 緑
+                borderColor: "#16a34a",
+                icon: "🌿",
+                desc: "リラックス効果と空間の程よい目隠しになる植栽。"
+            }
+        };
+
+        // プリセット配置データ（右側エリアの自由化、WC横に給湯が来たこと、梁・柱を考慮した最適なアップデート）
+        const PRESETS = {
+            planA: [
+                { type: 'warehouse', x: ORIGIN_X + 3.8*SCALE, y: ORIGIN_Y + 3.35*SCALE, angle: 0 }, // WCと給湯の左隣に寄せて空間最大化
+                { type: 'desk', x: ORIGIN_X + 1.2*SCALE, y: ORIGIN_Y + 1.8*SCALE, angle: 0 },     // 梁と柱を綺麗に避けた窓際中央の4人席
+                { type: 'meeting', x: ORIGIN_X + 4.8*SCALE, y: ORIGIN_Y + 1.0*SCALE, angle: 90 },  // EVの左に寄り添う会議テーブル
+                { type: 'partition', x: ORIGIN_X + 4.1*SCALE, y: ORIGIN_Y + 1.1*SCALE, angle: 90 },// 会議テーブルの間仕切り
+                { type: 'partition', x: ORIGIN_X + 4.6*SCALE, y: ORIGIN_Y + 2.0*SCALE, angle: 0 }, // 会議室のL字仕切り
+                { type: 'locker', x: ORIGIN_X + 7.5*SCALE, y: ORIGIN_Y + 2.3*SCALE, angle: 90 },   // EVから降りてすぐの通路（給湯の左隣の空き空間）に配置！
+                { type: 'plant', x: ORIGIN_X + 0.4*SCALE, y: ORIGIN_Y + 0.4*SCALE, angle: 0 },
+                { type: 'plant', x: ORIGIN_X + 4.0*SCALE, y: ORIGIN_Y + 2.2*SCALE, angle: 0 }
+            ],
+            planB: [
+                { type: 'warehouse', x: ORIGIN_X + 3.8*SCALE, y: ORIGIN_Y + 3.35*SCALE, angle: 0 }, 
+                { type: 'desk', x: ORIGIN_X + 1.6*SCALE, y: ORIGIN_Y + 1.2*SCALE, angle: 0 },     // メインの島型（窓際）
+                { type: 'solo_desk', x: ORIGIN_X + 1.2*SCALE, y: ORIGIN_Y + 3.5*SCALE, angle: 0 }, // 梁を考慮した個別集中席1（南側）
+                { type: 'solo_desk', x: ORIGIN_X + 2.4*SCALE, y: ORIGIN_Y + 3.5*SCALE, angle: 0 }, // 個別集中席2（南側）
+                { type: 'meeting', x: ORIGIN_X + 4.8*SCALE, y: ORIGIN_Y + 1.0*SCALE, angle: 90 },  
+                { type: 'partition', x: ORIGIN_X + 4.1*SCALE, y: ORIGIN_Y + 1.1*SCALE, angle: 90 },
+                { type: 'locker', x: ORIGIN_X + 7.5*SCALE, y: ORIGIN_Y + 2.3*SCALE, angle: 90 },   // 右側空きスペースのロッカー
+                { type: 'plant', x: ORIGIN_X + 0.4*SCALE, y: ORIGIN_Y + 0.4*SCALE, angle: 0 }
+            ]
+        };
+
+        // 初期ロード
+        window.onload = function() {
+            applyPreset('planA'); 
+            setupEventListeners();
+            showToast("プランA：動線重視・梁回避レイアウトをロードしました！");
+        };
+
+        // メッセージ表示機能 (Toast)
+        function showToast(message, iconClass = "fa-circle-check text-emerald-400") {
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toast-icon');
+            const text = document.getElementById('toast-text');
+            
+            icon.className = `fa-solid ${iconClass}`;
+            text.textContent = message;
+            
+            toast.classList.remove('opacity-0', 'translate-y-20', 'pointer-events-none');
+            toast.classList.add('opacity-100', 'translate-y-0');
+            
+            setTimeout(() => {
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', 'translate-y-20', 'pointer-events-none');
+            }, 3000);
+        }
+
+        // プリセット適用
+        function applyPreset(presetKey) {
+            objects = [];
+            const preset = PRESETS[presetKey];
+            
+            preset.forEach((item, index) => {
+                const spec = FURNITURE_TYPES[item.type];
+                objects.push({
+                    id: `${item.type}_${Date.now()}_${index}`,
+                    type: item.type,
+                    name: spec.name,
+                    x: item.x,
+                    y: item.y,
+                    w: spec.w * SCALE,
+                    h: spec.h * SCALE,
+                    angle: item.angle,
+                    color: spec.color,
+                    borderColor: spec.borderColor,
+                    icon: spec.icon
+                });
+            });
+            
+            selectedObject = null;
+            updateSelectionUI();
+            checkRequirements();
+            draw();
+            
+            if (presetKey === 'planA') {
+                showToast("プランA（執務スペース最大化）を配置しました！", "fa-wand-magic-sparkles text-indigo-400");
+            } else if (presetKey === 'planB') {
+                showToast("プランB（ハイブリッド集中席）を配置しました！", "fa-wand-magic-sparkles text-indigo-400");
+            }
+        }
+
+        // 家具を追加
+        function addFurniture(type) {
+            const spec = FURNITURE_TYPES[type];
+            if (!spec) return;
+
+            // 画面の中央付近に配置
+            const newObj = {
+                id: `${type}_${Date.now()}`,
+                type: type,
+                name: spec.name,
+                x: ORIGIN_X + 2 * SCALE,
+                y: ORIGIN_Y + 2 * SCALE,
+                w: spec.w * SCALE,
+                h: spec.h * SCALE,
+                angle: 0,
+                color: spec.color,
+                borderColor: spec.borderColor,
+                icon: spec.icon
+            };
+
+            objects.push(newObj);
+            selectedObject = newObj;
+            updateSelectionUI();
+            checkRequirements();
+            draw();
+            showToast(`${spec.name} を追加しました`);
+        }
+
+        // 要件達成チェック
+        function checkRequirements() {
+            const counts = { desk: 0, solo_desk: 0, warehouse: 0, meeting: 0, partition: 0, locker: 0 };
+            
+            objects.forEach(obj => {
+                if (obj.type in counts) {
+                    counts[obj.type]++;
+                }
+            });
+
+            // 職員4名分の席が確保されているか（4人デスクが1個以上、もしくは1人用デスクとの合計が4席以上）
+            const deskMeets = (counts.desk >= 1) || (counts.solo_desk + (counts.desk * 4) >= 4);
+
+            // 倉庫が3平米（幅2m x 奥行1.5m等）を満たしているかチェック
+            const warehouseMeets = objects.some(obj => {
+                if (obj.type === 'warehouse') {
+                    const areaM2 = (obj.w / SCALE) * (obj.h / SCALE);
+                    return areaM2 >= 2.95; 
+                }
+                return false;
+            });
+
+            updateBadge('check-desk', deskMeets);
+            updateBadge('check-warehouse', warehouseMeets);
+            updateBadge('check-meeting', counts.meeting >= 1);
+            updateBadge('check-partition', counts.partition >= 1);
+            updateBadge('check-locker', counts.locker >= 1);
+        }
+
+        function updateBadge(elementId, isMet) {
+            const el = document.getElementById(elementId);
+            const icon = el.querySelector('i');
+            
+            if (isMet) {
+                el.classList.remove('bg-slate-50', 'border-slate-100', 'text-slate-500');
+                el.classList.add('bg-emerald-50', 'border-emerald-200', 'text-emerald-900');
+                icon.className = 'fa-solid fa-circle-check text-emerald-600';
+            } else {
+                el.classList.remove('bg-emerald-50', 'border-emerald-200', 'text-emerald-900');
+                el.classList.add('bg-slate-50', 'border-slate-100', 'text-slate-500');
+                icon.className = 'fa-solid fa-circle-check text-slate-300';
+            }
+        }
+
+        // 選択中の家具の回転
+        function rotateSelected() {
+            if (!selectedObject) return;
+            selectedObject.angle = (selectedObject.angle + 90) % 360;
+            
+            // 幅と高さをスワップ
+            const temp = selectedObject.w;
+            selectedObject.w = selectedObject.h;
+            selectedObject.h = temp;
+
+            draw();
+            showToast("家具を90度回転しました");
+        }
+
+        // 選択中の家具の削除
+        function deleteSelected() {
+            if (!selectedObject) return;
+            objects = objects.filter(o => o.id !== selectedObject.id);
+            selectedObject = null;
+            updateSelectionUI();
+            checkRequirements();
+            draw();
+            showToast("家具を削除しました", "fa-trash-can text-red-400");
+        }
+
+        // 全リセット
+        function resetLayout() {
+            objects = [];
+            selectedObject = null;
+            updateSelectionUI();
+            checkRequirements();
+            draw();
+            showToast("レイアウトを全消去しました", "fa-arrow-rotate-left text-red-400");
+        }
+
+        // 選択状態によるUIアップデート
+        function updateSelectionUI() {
+            if (selectedObject) {
+                btnRotate.disabled = false;
+                btnRotate.classList.remove('bg-slate-100', 'text-slate-400', 'cursor-not-allowed');
+                btnRotate.classList.add('bg-slate-800', 'text-white', 'hover:bg-slate-700');
+
+                btnDelete.disabled = false;
+                btnDelete.classList.remove('bg-slate-100', 'text-slate-400', 'cursor-not-allowed');
+                btnDelete.classList.add('bg-red-50', 'text-red-600', 'border', 'border-red-200', 'hover:bg-red-100');
+            } else {
+                btnRotate.disabled = true;
+                btnRotate.classList.add('bg-slate-100', 'text-slate-400', 'cursor-not-allowed');
+                btnRotate.classList.remove('bg-slate-800', 'text-white', 'hover:bg-slate-700');
+
+                btnDelete.disabled = true;
+                btnDelete.classList.add('bg-slate-100', 'text-slate-400', 'cursor-not-allowed');
+                btnDelete.classList.remove('bg-red-50', 'text-red-600', 'border', 'border-red-200', 'hover:bg-red-100');
+            }
+        }
+
+        // ドラッグ制限（壁の中に綺麗に収める：EVホール等も含めた部屋全体の有効内壁を境界とします）
+        function constrainPosition(obj) {
+            const minX = ORIGIN_X;
+            const maxX = ORIGIN_X + ROOM_WIDTH - obj.w;
+            const minY = ORIGIN_Y;
+            const maxY = ORIGIN_Y + ROOM_HEIGHT - obj.h;
+
+            // 部屋全体で自由に配置できるように境界線を制限
+            obj.x = Math.max(minX, Math.min(obj.x, maxX));
+            obj.y = Math.max(minY, Math.min(obj.y, maxY));
+        }
+
+        // 描画コアロジック
+        function draw() {
+            // 背景クリア
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // 1. グリッドの描画 (50cm間隔 = 30px)
+            ctx.strokeStyle = '#f1f5f9';
+            ctx.lineWidth = 1;
+            for (let x = ORIGIN_X; x <= ORIGIN_X + ROOM_WIDTH; x += 30) {
+                ctx.beginPath();
+                ctx.moveTo(x, ORIGIN_Y);
+                ctx.lineTo(x, ORIGIN_Y + ROOM_HEIGHT);
+                ctx.stroke();
+            }
+            for (let y = ORIGIN_Y; y <= ORIGIN_Y + ROOM_HEIGHT; y += 30) {
+                ctx.beginPath();
+                ctx.moveTo(ORIGIN_X, y);
+                ctx.lineTo(ORIGIN_X + ROOM_WIDTH, y);
+                ctx.stroke();
+            }
+
+            // 2. 梁（梁ハッチング）と柱（コラム）の正確な描写
+            drawBeamsAndColumns();
+
+            // 3. 固定オフィス構造（右端のEV・EVホール・トイレ・WCに密着した給湯ゾーン）
+            drawFixedInfrastructure();
+
+            // 4. 配置された家具の描画
+            objects.forEach(obj => {
+                const isSelected = selectedObject && (selectedObject.id === obj.id);
+                
+                // 家具本体
+                ctx.fillStyle = obj.color;
+                ctx.strokeStyle = isSelected ? '#4f46e5' : obj.borderColor;
+                ctx.lineWidth = isSelected ? 3 : 2;
+                
+                // 角丸四角形として描画
+                drawRoundRect(ctx, obj.x, obj.y, obj.w, obj.h, 6, true, true);
+
+                // アイコン & ラベルの描画
+                ctx.fillStyle = isSelected ? '#312e81' : '#1e293b';
+                ctx.font = 'bold 10px "Noto Sans JP"';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                
+                // アイコンを中央に
+                ctx.fillText(obj.icon, obj.x + obj.w / 2, obj.y + obj.h / 2 - 6);
+                
+                // 省略表記のラベル
+                ctx.font = '500 8px "Noto Sans JP"';
+                let label = obj.name;
+                if (obj.type === 'solo_desk') label = '1人デスク';
+                if (obj.type === 'desk') label = 'デスク (4名)';
+                if (obj.type === 'meeting') label = '会議テーブル';
+                if (obj.type === 'partition') label = '仕切り';
+                if (obj.type === 'warehouse') label = '倉庫 (3.0㎡)';
+                if (obj.type === 'locker') label = 'ロッカー';
+                ctx.fillText(label, obj.x + obj.w / 2, obj.y + obj.h / 2 + 10);
+
+                // 選択中のマーク（破線の外枠を追加）
+                if (isSelected) {
+                    ctx.strokeStyle = '#4f46e5';
+                    ctx.lineWidth = 1;
+                    ctx.setLineDash([4, 4]);
+                    ctx.strokeRect(obj.x - 4, obj.y - 4, obj.w + 8, obj.h + 8);
+                    ctx.setLineDash([]);
+                }
+            });
+
+            // 5. 外壁の描画（一番上に描画することで、梁や柱のハッチングを綺麗にトリミング）
+            drawExteriorWalls();
+        }
+
+        // 梁（梁ハッチング）と柱（コラム）の正確な描写
+        function drawBeamsAndColumns() {
+            ctx.fillStyle = "rgba(100, 116, 139, 0.15)"; // 梁：薄いグレーストライプ調を模した塗り
+            ctx.strokeStyle = "rgba(100, 116, 139, 0.25)";
+            ctx.lineWidth = 1;
+
+            const beamDepth = 0.20 * SCALE; // 梁の出幅 (約15〜20cm)
+
+            // 1. 北側の梁（上部壁沿い全体）
+            ctx.fillRect(ORIGIN_X, ORIGIN_Y, ROOM_WIDTH, beamDepth);
+            drawHatchingPattern(ORIGIN_X, ORIGIN_Y, ROOM_WIDTH, beamDepth);
+
+            // 2. 南側の梁（下部壁沿い全体）
+            ctx.fillRect(ORIGIN_X, ORIGIN_Y + ROOM_HEIGHT - beamDepth, ROOM_WIDTH, beamDepth);
+            drawHatchingPattern(ORIGIN_X, ORIGIN_Y + ROOM_HEIGHT - beamDepth, ROOM_WIDTH, beamDepth);
+
+            // 3. 西側の梁（斜め壁に沿って）
+            const topLeftX = ORIGIN_X + 0.3 * SCALE;
+            const topLeftY = ORIGIN_Y;
+            const bottomLeftX = ORIGIN_X;
+            const bottomLeftY = ORIGIN_Y + ROOM_HEIGHT;
+            
+            ctx.beginPath();
+            ctx.moveTo(topLeftX, topLeftY);
+            ctx.lineTo(topLeftX + beamDepth, topLeftY);
+            ctx.lineTo(bottomLeftX + beamDepth, bottomLeftY);
+            ctx.lineTo(bottomLeftX, bottomLeftY);
+            ctx.closePath();
+            ctx.fill();
+
+            // 4. 正確に図面から読み取った「柱」の配置
+            ctx.fillStyle = "rgba(100, 116, 139, 0.35)"; // 柱は少し濃い目のグレー
+
+            // 柱①: 北中央（EVのすぐ左付近、梁からさらに突出する柱）
+            const colN_X = ORIGIN_X + 5.7 * SCALE;
+            const colN_Y = ORIGIN_Y;
+            const colN_W = 0.5 * SCALE;
+            const colN_H = 0.45 * SCALE;
+            ctx.fillRect(colN_X, colN_Y, colN_W, colN_H);
+            ctx.strokeRect(colN_X, colN_Y, colN_W, colN_H);
+
+            // 柱②: 南中央（WC・給湯の左隣付近、梁からさらに突出する柱）
+            const colS_X = ORIGIN_X + 5.6 * SCALE;
+            const colS_Y = ORIGIN_Y + ROOM_HEIGHT - 0.45 * SCALE;
+            const colS_W = 0.5 * SCALE;
+            const colS_H = 0.45 * SCALE;
+            ctx.fillRect(colS_X, colS_Y, colS_W, colS_H);
+            ctx.strokeRect(colS_X, colS_Y, colS_W, colS_H);
+
+            // 柱③: 北西角
+            ctx.fillRect(topLeftX, topLeftY, 0.4 * SCALE, 0.4 * SCALE);
+            ctx.strokeRect(topLeftX, topLeftY, 0.4 * SCALE, 0.4 * SCALE);
+
+            // 柱④: 南西角
+            ctx.fillRect(bottomLeftX, bottomLeftY - 0.4 * SCALE, 0.4 * SCALE, 0.4 * SCALE);
+            ctx.strokeRect(bottomLeftX, bottomLeftY - 0.4 * SCALE, 0.4 * SCALE, 0.4 * SCALE);
+
+            // ラベル表示
+            ctx.fillStyle = '#64748b';
+            ctx.font = 'bold 8px "Noto Sans JP"';
+            ctx.textAlign = 'center';
+            ctx.fillText("梁 (上部天井)", ORIGIN_X + 3.0 * SCALE, ORIGIN_Y + beamDepth + 10);
+            ctx.fillText("柱", colN_X + colN_W/2, colN_Y + colN_H + 10);
+            ctx.fillText("柱", colS_X + colS_W/2, colS_Y - 5);
+        }
+
+        // 梁のハッチング(斜線)を描画するヘルパー
+        function drawHatchingPattern(x, y, w, h) {
+            ctx.save();
+            ctx.strokeStyle = "rgba(100, 116, 139, 0.2)";
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            const step = 8;
+            for (let i = 0; i < w + h; i += step) {
+                ctx.moveTo(x + i, y);
+                ctx.lineTo(x + i - h, y + h);
+            }
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        // 外壁の描画
+        function drawExteriorWalls() {
+            ctx.strokeStyle = '#1e293b'; // ダークスレート
+            ctx.lineWidth = 5;
+            ctx.lineJoin = 'miter';
+
+            const topLeftX = ORIGIN_X + 0.3 * SCALE;
+            const topLeftY = ORIGIN_Y;
+            const bottomLeftX = ORIGIN_X;
+            const bottomLeftY = ORIGIN_Y + ROOM_HEIGHT;
+
+            ctx.beginPath();
+            // 北壁
+            ctx.moveTo(topLeftX, topLeftY);
+            ctx.lineTo(ORIGIN_X + ROOM_WIDTH, ORIGIN_Y);
+            // 東壁
+            ctx.lineTo(ORIGIN_X + ROOM_WIDTH, ORIGIN_Y + ROOM_HEIGHT);
+            // 南壁
+            ctx.lineTo(bottomLeftX, bottomLeftY);
+            // 西壁（斜め）
+            ctx.lineTo(topLeftX, topLeftY);
+            ctx.stroke();
+
+            // 窓の表現
+            ctx.strokeStyle = '#bae6fd'; // 淡いスカイブルー
+            ctx.lineWidth = 3;
+
+            // 西側大窓
+            ctx.beginPath();
+            ctx.moveTo(topLeftX + (bottomLeftX - topLeftX) * 0.2, topLeftY + (bottomLeftY - topLeftY) * 0.2);
+            ctx.lineTo(topLeftX + (bottomLeftX - topLeftX) * 0.8, topLeftY + (bottomLeftY - topLeftY) * 0.8);
+            ctx.stroke();
+
+            // 北側窓1
+            ctx.beginPath();
+            ctx.moveTo(ORIGIN_X + 1 * SCALE, ORIGIN_Y);
+            ctx.lineTo(ORIGIN_X + 2.5 * SCALE, ORIGIN_Y);
+            ctx.stroke();
+
+            // 北側窓2
+            ctx.beginPath();
+            ctx.moveTo(ORIGIN_X + 4 * SCALE, ORIGIN_Y);
+            ctx.lineTo(ORIGIN_X + 5.5 * SCALE, ORIGIN_Y);
+            ctx.stroke();
+
+            // 南側窓
+            ctx.beginPath();
+            ctx.moveTo(ORIGIN_X + 3 * SCALE, ORIGIN_Y + ROOM_HEIGHT);
+            ctx.lineTo(ORIGIN_X + 4.5 * SCALE, ORIGIN_Y + ROOM_HEIGHT);
+            ctx.stroke();
+
+            // 寸法・情報
+            ctx.fillStyle = '#475569';
+            ctx.font = '10px "Noto Sans JP"';
+            ctx.textAlign = 'left';
+            ctx.fillText("西側大窓 (採光)", ORIGIN_X + 0.3 * SCALE, ORIGIN_Y + ROOM_HEIGHT / 2);
+            ctx.fillText("← 約11.2 m →", ORIGIN_X + ROOM_WIDTH/2 - 30, ORIGIN_Y + ROOM_HEIGHT + 20);
+            
+            ctx.fillStyle = 'rgba(148, 163, 184, 0.3)';
+            ctx.font = 'bold 20px "Noto Sans JP"';
+            ctx.textAlign = 'center';
+            ctx.fillText("3F  12.47坪", ORIGIN_X + 3.0 * SCALE, ORIGIN_Y + ROOM_HEIGHT / 2 - 10);
+            ctx.font = 'bold 15px "Noto Sans JP"';
+            ctx.fillText("(41.25㎡)", ORIGIN_X + 3.0 * SCALE, ORIGIN_Y + ROOM_HEIGHT / 2 + 15);
+        }
+
+        // 固定インフラ（EV・トイレ・WCにくっつけた給湯・ドアなど）の描画
+        function drawFixedInfrastructure() {
+            const rightStart = ORIGIN_X + 7.4 * SCALE; // 固定ゾーンの起点
+
+            // 1. エリア背景（固定エリアを薄いグレーに）
+            ctx.fillStyle = 'rgba(248, 250, 252, 0.4)';
+            ctx.fillRect(rightStart, ORIGIN_Y, ROOM_WIDTH - (rightStart - ORIGIN_X), ROOM_HEIGHT);
+
+            // 2. 境界壁（執務スペースとの間仕切り壁）
+            ctx.strokeStyle = '#334155';
+            ctx.lineWidth = 4;
+            
+            // EVの左壁
+            ctx.beginPath();
+            ctx.moveTo(rightStart, ORIGIN_Y);
+            ctx.lineTo(rightStart, ORIGIN_Y + 2.1 * SCALE);
+            ctx.lineTo(rightStart + 2.0 * SCALE, ORIGIN_Y + 2.1 * SCALE);
+            ctx.stroke();
+
+            // WC壁
+            const wcStartX = rightStart + 2.5 * SCALE;
+            ctx.beginPath();
+            ctx.moveTo(wcStartX, ORIGIN_Y + 2.1 * SCALE);
+            ctx.lineTo(wcStartX, ORIGIN_Y + ROOM_HEIGHT);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(wcStartX, ORIGIN_Y + 3.2 * SCALE);
+            ctx.lineTo(rightStart + 3.8 * SCALE, ORIGIN_Y + 3.2 * SCALE);
+            ctx.stroke();
+
+            // 3. EV (エレベーター)
+            const evX = rightStart + 0.1 * SCALE;
+            const evY = ORIGIN_Y + 0.1 * SCALE;
+            const evW = 1.9 * SCALE;
+            const evH = 1.9 * SCALE;
+            ctx.fillStyle = '#e2e8f0';
+            ctx.fillRect(evX, evY, evW, evH);
+            ctx.strokeStyle = '#64748b';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(evX, evY, evW, evH);
+            
+            ctx.strokeStyle = '#94a3b8';
+            ctx.lineWidth = 1;
+            ctx.setLineDash([4, 4]);
+            ctx.beginPath();
+            ctx.moveTo(evX, evY); ctx.lineTo(evX + evW, evY + evH);
+            ctx.moveTo(evX + evW, evY); ctx.lineTo(evX, evY + evH);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            ctx.fillStyle = '#475569';
+            ctx.font = 'bold 11px "Noto Sans JP"';
+            ctx.textAlign = 'center';
+            ctx.fillText("EV", evX + evW/2, evY + evH/2);
+
+            // 4. EVホール
+            const evHallX = rightStart + 2.1 * SCALE;
+            const evHallW = 1.7 * SCALE;
+            ctx.fillStyle = '#f1f5f9';
+            ctx.fillRect(evHallX, ORIGIN_Y, evHallW, 2.1 * SCALE);
+            ctx.fillStyle = '#64748b';
+            ctx.font = 'bold 10px "Noto Sans JP"';
+            ctx.fillText("EVホール", evHallX + evHallW/2, ORIGIN_Y + 0.6 * SCALE);
+
+            // 5. PS (パイプスペース)
+            const psX = rightStart + 3.1 * SCALE;
+            const psY = ORIGIN_Y + 2.1 * SCALE;
+            const psW = 0.7 * SCALE;
+            const psH = 1.1 * SCALE;
+            ctx.fillStyle = '#cbd5e1';
+            ctx.fillRect(psX, psY, psW, psH);
+            ctx.strokeStyle = '#64748b';
+            ctx.lineWidth = 1.5;
+            ctx.strokeRect(psX, psY, psW, psH);
+            
+            ctx.setLineDash([2, 2]);
+            ctx.beginPath();
+            ctx.moveTo(psX, psY); ctx.lineTo(psX+psW, psY+psH);
+            ctx.moveTo(psX+psW, psY); ctx.lineTo(psX, psY+psH);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            ctx.fillStyle = '#475569';
+            ctx.font = 'bold 9px "Noto Sans JP"';
+            ctx.fillText("PS", psX + psW/2, psY + psH/2);
+
+            // 6. トイレ / WC (便座デザイン付き)
+            const toiletX = wcStartX;
+            const toiletY = ORIGIN_Y + 3.2 * SCALE;
+            const toiletW = 1.3 * SCALE;
+            const toiletH = 1.8 * SCALE;
+            ctx.fillStyle = '#f1f5f9';
+            ctx.fillRect(toiletX, toiletY, toiletW, toiletH);
+            ctx.strokeStyle = '#64748b';
+            ctx.strokeRect(toiletX, toiletY, toiletW, toiletH);
+            
+            // 便器簡易マーク
+            ctx.fillStyle = '#ffffff';
+            ctx.strokeStyle = '#94a3b8';
+            drawRoundRect(ctx, toiletX + 0.4*SCALE, toiletY + 0.9*SCALE, 0.5*SCALE, 0.7*SCALE, 10, true, true);
+            ctx.strokeRect(toiletX + 0.4*SCALE, toiletY + 0.6*SCALE, 0.5*SCALE, 0.3*SCALE);
+            
+            ctx.fillStyle = '#475569';
+            ctx.font = 'bold 10px "Noto Sans JP"';
+            ctx.fillText("WC", toiletX + 0.65*SCALE, toiletY + 0.3 * SCALE);
+
+            // 7. 給湯エリア (WCのすぐ左隣にくっつけて配置、右側の通路エリアを開放)
+            // 図面通り WC の左壁（wcStartX）にぴったりくっつけます。
+            const kitchenW = 1.2 * SCALE;
+            const kitchenH = 0.8 * SCALE;
+            const kitchenX = wcStartX - kitchenW; // WCの左に密着
+            const kitchenY = ORIGIN_Y + ROOM_HEIGHT - kitchenH; // 下側の壁に密着
+            
+            ctx.fillStyle = '#e2e8f0';
+            ctx.fillRect(kitchenX, kitchenY, kitchenW, kitchenH);
+            ctx.strokeStyle = '#64748b';
+            ctx.strokeRect(kitchenX, kitchenY, kitchenW, kitchenH);
+            
+            // 流し台とコンロのマーク
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(kitchenX + 0.1*SCALE, kitchenY + 0.1*SCALE, 0.4*SCALE, 0.5*SCALE); // 流しシンク
+            ctx.strokeRect(kitchenX + 0.1*SCALE, kitchenY + 0.1*SCALE, 0.4*SCALE, 0.5*SCALE);
+            ctx.beginPath(); // コンロ
+            ctx.arc(kitchenX + 0.8*SCALE, kitchenY + 0.35*SCALE, 0.15*SCALE, 0, Math.PI*2);
+            ctx.stroke();
+
+            ctx.fillStyle = '#475569';
+            ctx.font = 'bold 9px "Noto Sans JP"';
+            ctx.fillText("給湯", kitchenX + kitchenW/2 + 10, kitchenY + kitchenH/2 + 15);
+
+            // 8. ドアの開閉（円弧）
+            ctx.strokeStyle = '#94a3b8';
+            ctx.lineWidth = 1;
+            
+            // 入口ドア (EVホールから室内)
+            const d1X = wcStartX;
+            const d1Y = ORIGIN_Y + 1.2 * SCALE;
+            ctx.beginPath();
+            ctx.arc(d1X, d1Y, 0.8*SCALE, Math.PI, Math.PI * 1.5, false);
+            ctx.lineTo(d1X, d1Y);
+            ctx.stroke();
+
+            // トイレドア
+            const d2X = wcStartX;
+            const d2Y = ORIGIN_Y + 3.2 * SCALE;
+            ctx.beginPath();
+            ctx.arc(d2X, d2Y, 0.6*SCALE, Math.PI, Math.PI * 1.5, false);
+            ctx.lineTo(d2X, d2Y);
+            ctx.stroke();
+        }
+
+        // 角丸四角形ユーティリティ
+        function drawRoundRect(context, x, y, width, height, radius, fill, stroke) {
+            if (typeof radius === 'undefined') radius = 5;
+            if (typeof radius === 'number') radius = {tl: radius, tr: radius, br: radius, bl: radius};
+            else {
+                var defaultRadius = {tl: 0, tr: 0, br: 0, bl: 0};
+                for (var side in defaultRadius) {
+                    radius[side] = radius[side] || defaultRadius[side];
+                }
+            }
+            context.beginPath();
+            context.moveTo(x + radius.tl, y);
+            context.lineTo(x + width - radius.tr, y);
+            context.quadraticCurveTo(x + width, y, x + width, y + radius.tr);
+            context.lineTo(x + width, y + height - radius.br);
+            context.quadraticCurveTo(x + width, y + height, x + width - radius.br, y + height);
+            context.lineTo(x + radius.bl, y + height);
+            context.quadraticCurveTo(x, y + height, x, y + height - radius.bl);
+            context.lineTo(x, y + radius.tl);
+            context.quadraticCurveTo(x, y, x + radius.tl, y);
+            context.closePath();
+            if (fill) context.fill();
+            if (stroke) context.stroke();
+        }
+
+        // イベントリスナー設定
+        function setupEventListeners() {
+            // マウス＆タッチドラッグ
+            canvas.addEventListener('mousedown', startDrag);
+            canvas.addEventListener('mousemove', drag);
+            canvas.addEventListener('mouseup', endDrag);
+            canvas.addEventListener('mouseleave', endDrag);
+
+            canvas.addEventListener('touchstart', (e) => {
+                const touch = e.touches[0];
+                const mouseEvent = new MouseEvent('mousedown', {
+                    clientX: touch.clientX,
+                    clientY: touch.clientY
+                });
+                canvas.dispatchEvent(mouseEvent);
+            }, { passive: true });
+
+            canvas.addEventListener('touchmove', (e) => {
+                const touch = e.touches[0];
+                const mouseEvent = new MouseEvent('mousemove', {
+                    clientX: touch.clientX,
+                    clientY: touch.clientY
+                });
+                canvas.dispatchEvent(mouseEvent);
+            }, { passive: true });
+
+            canvas.addEventListener('touchend', () => {
+                const mouseEvent = new MouseEvent('mouseup', {});
+                canvas.dispatchEvent(mouseEvent);
+            }, { passive: true });
+        }
+
+        // マウスポジション取得
+        function getMousePos(e) {
+            const rect = canvas.getBoundingClientRect();
+            return {
+                x: (e.clientX - rect.left) * (canvas.width / rect.width),
+                y: (e.clientY - rect.top) * (canvas.height / rect.height)
+            };
+        }
+
+        // ドラッグ開始
+        function startDrag(e) {
+            const pos = getMousePos(e);
+            
+            // クリックされたオブジェクトを探す（最前面を優先）
+            let hit = null;
+            for (let i = objects.length - 1; i >= 0; i--) {
+                const obj = objects[i];
+                if (pos.x >= obj.x && pos.x <= obj.x + obj.w &&
+                    pos.y >= obj.y && pos.y <= obj.y + obj.h) {
+                    hit = obj;
+                    break;
+                }
+            }
+
+            if (hit) {
+                selectedObject = hit;
+                isDragging = true;
+                dragOffsetX = pos.x - hit.x;
+                dragOffsetY = pos.y - hit.y;
+                
+                // 選択したものを最前面にする
+                objects = objects.filter(o => o.id !== hit.id);
+                objects.push(hit);
+            } else {
+                selectedObject = null;
+            }
+
+            updateSelectionUI();
+            draw();
+        }
+
+        // ドラッグ中
+        function drag(e) {
+            if (!isDragging || !selectedObject) return;
+            const pos = getMousePos(e);
+            
+            selectedObject.x = pos.x - dragOffsetX;
+            selectedObject.y = pos.y - dragOffsetY;
+            
+            constrainPosition(selectedObject);
+            draw();
+        }
+
+        // ドラッグ終了
+        function endDrag() {
+            if (isDragging) {
+                isDragging = false;
+                checkRequirements();
+            }
+        }
+
+        // 画像としてエクスポート
+        function exportAsImage() {
+            const prevSelected = selectedObject;
+            selectedObject = null;
+            draw();
+
+            try {
+                const dataURL = canvas.toDataURL('image/png');
+                const link = document.createElement('a');
+                link.download = 'エヌケービル3F_オフィスレイアウト設計案.png';
+                link.href = dataURL;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                showToast("レイアウト画像をダウンロードしました！", "fa-file-image text-emerald-400");
+            } catch (err) {
+                console.error(err);
+                showToast("画像の生成に失敗しました（プレビュー制限）", "fa-circle-exclamation text-red-400");
+            }
+
+            selectedObject = prevSelected;
+            draw();
+        }
+    </script>
+</body>
+</html>
